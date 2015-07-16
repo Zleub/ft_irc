@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 16:14:37 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/15 21:30:30 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/16 21:44:10 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,48 @@ struct s_network
 
 t_network		g_net;
 
+#define CIRC_BUFSIZE 12
+
+struct s_circ_buf
+{
+	char	buf[CIRC_BUFSIZE];
+	int		head;
+	int		tail;
+};
+
+int		write_buf(struct s_circ_buf *ptr, char *mem, int size)
+{
+	int		i = 0;
+
+	while (i < size)
+	{
+		ptr->buf[(i + ptr->head) % (CIRC_BUFSIZE - 1)] = mem[i];
+		i += 1;
+	}
+	ptr->head = (i + ptr->head) % (CIRC_BUFSIZE - 1);
+	return i;
+}
+
 struct s_client
 {
-	int				id;
-	struct sockaddr	addr;
-	socklen_t		addr_size;
+	int					id;
+	struct sockaddr		addr;
+	socklen_t			addr_size;
+	struct s_circ_buf	buf;
 };
 
 t_client		g_clients[FD_SETSIZE];
+
+void	debug_clients()
+{
+	for (int i = 0; i < FD_SETSIZE; i += 1)
+	{
+		if (g_clients[i].id != 0)
+		{
+			ft_printf("%d,\tH: %d,\tT: %d,\t: %s\n", i, g_clients[i].buf.head, g_clients[i].buf.tail, g_clients[i].buf.buf);
+		}
+	}
+}
 
 int		die(void)
 {
@@ -52,16 +86,24 @@ int		read_server(int fd)
 
 	ft_memset(buf, 0, 255);
 	if (!(n = read(fd, buf, 254)))
+	{
+		ft_putstr("EXIT WITHOUT TEXT\n");
 		return (0);
+	}
 	else if (n < 0)
 	{
-		ft_putstr("read flag\n");
+		ft_putstr("read flag 2\n");
 		return (0);
 	}
 	else
 	{
 		ft_putstr("reading : \n\t");
 		ft_putstr(buf);
+		// ft_memcpy((g_clients[fd].buf.buf + g_clients[fd].buf.head), buf, n - 1);
+		write_buf(&(g_clients[fd].buf), buf, n - 1);
+
+		if (!ft_strcmp(buf, "debug\n"))
+			debug_clients();
 		return (n);
 	}
 
@@ -74,9 +116,9 @@ void	accept_server(void)
 	fd = 0;
 	if ((fd = accept(g_net.fd, &(g_clients[fd].addr), &(g_clients[fd].addr_size))) == -1)
 		die();
-	ft_printf("-> %d\n", fd);
 	FD_SET(fd, &(g_net.active_fd_set));
 	g_clients[fd].id = fd;
+	ft_printf("<-- NEW ENTRY %d -->\n", fd);
 }
 
 void	select_server(void)
@@ -93,11 +135,11 @@ void	select_server(void)
 				accept_server();
 			else
 			{
-				ft_putstr("read\n");
 				if (!read_server(i))
 				{
 					close (i);
 					FD_CLR (i, &(g_net.active_fd_set));
+					g_clients[i].id = 0;
 				}
 			}
 		}
@@ -117,6 +159,8 @@ void	init_server(char *port)
 	if (listen(g_net.fd, 0) == -1)
 		die();
 	FD_ZERO (&(g_net.active_fd_set));
+	FD_SET (0, &(g_net.active_fd_set));
+	g_clients[0].id = 1440;
 	FD_SET (g_net.fd, &(g_net.active_fd_set));
 	select_server();
 }
@@ -125,9 +169,19 @@ int		main(int ac, char *av[])
 {
 	ft_memset(&g_net, 0, sizeof(g_net));
 	ft_memset(&g_clients, 0, sizeof(g_clients));
+	for (int i = 0; i < FD_SETSIZE; ++i)
+	{
+		g_clients[i].id = 0;
+		g_clients[i].buf.head = 0;
+		g_clients[i].buf.tail = 0;
+	}
 	if (ac == 2) {
+		debug_clients();
 		init_server(av[1]);
-		while (42) ;
+		while (42) {
+			select_server();
+			debug_clients();
+		}
 	}
 	return (0);
 }
