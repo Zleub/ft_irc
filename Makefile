@@ -6,7 +6,7 @@
 #    By: adebray <adebray@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/10/02 03:26:29 by adebray           #+#    #+#              #
-#    Updated: 2015/07/15 18:04:23 by adebray          ###   ########.fr        #
+#    Updated: 2015/07/17 00:41:33 by adebray          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,22 +44,27 @@ $(CLI): $(CLI_SRC)
 	@echo '!'
 	@echo "\033[32m•\033[0m $(CLI) compil: \033[32m$(CLI)\033[0m"
 
-_depend: _libft
+_depend: _libft _ftprintf
 
 _libft: $(HEADDIR)/libft.h
 	@make -C $(SRCDIR)/libft
+
+_ftprintf: $(HEADDIR)/ft_printf.h
+	@make -C $(SRCDIR)/ft_printf
 
 %.o: %.c
 	@echo '.''\c'
 	@$(CC) $(CCFLAGS) $(HEADFLAG) -o $@ -c $<
 
 clean:
+	@make -C $(SRCDIR)/ft_printf clean
 	@make -C $(SRCDIR)/libft clean
 	@rm -f $(SERV_OBJ)
 	@rm -f $(CLI_OBJ)
 	@echo "\033[31m•\033[0m $(NAME) clean.\033[0m"
 
 fclean:
+	@make -C $(SRCDIR)/ft_printf fclean
 	@make -C $(SRCDIR)/libft fclean
 	@rm -f $(SERV_OBJ)
 	@rm -f $(CLI_OBJ)

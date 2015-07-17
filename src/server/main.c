@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 16:14:37 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/16 21:44:10 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/17 16:03:03 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ struct s_network
 
 t_network		g_net;
 
-#define CIRC_BUFSIZE 12
+#define CIRC_BUFSIZE 1024
 
 struct s_circ_buf
 {
@@ -92,18 +92,19 @@ int		read_server(int fd)
 	}
 	else if (n < 0)
 	{
-		ft_putstr("read flag 2\n");
+		ft_putstr("read flag error\n");
 		return (0);
 	}
 	else
 	{
-		ft_putstr("reading : \n\t");
+		ft_putstr("reading :\t");
 		ft_putstr(buf);
-		// ft_memcpy((g_clients[fd].buf.buf + g_clients[fd].buf.head), buf, n - 1);
-		write_buf(&(g_clients[fd].buf), buf, n - 1);
+		if (buf[n - 1] == '\n')
+			write_buf(&(g_clients[fd].buf), buf, n - 1);
+		else
+			write_buf(&(g_clients[fd].buf), buf, n);
 
-		if (!ft_strcmp(buf, "debug\n"))
-			debug_clients();
+
 		return (n);
 	}
 
@@ -124,7 +125,8 @@ void	accept_server(void)
 void	select_server(void)
 {
 	g_net.read_fd_set = g_net.active_fd_set;
-	if (select (FD_SETSIZE, &(g_net.read_fd_set), NULL, NULL, NULL) < 0)
+	g_net.write_fd_set = g_net.active_fd_set;
+	if (select (FD_SETSIZE, &(g_net.read_fd_set), &(g_net.write_fd_set), NULL, NULL) < 0)
 		die();
 
 	for (int i = 0; i < FD_SETSIZE; ++i)
@@ -159,8 +161,8 @@ void	init_server(char *port)
 	if (listen(g_net.fd, 0) == -1)
 		die();
 	FD_ZERO (&(g_net.active_fd_set));
-	FD_SET (0, &(g_net.active_fd_set));
-	g_clients[0].id = 1440;
+	// FD_SET (0, &(g_net.active_fd_set));
+	// g_clients[0].id = 1440;
 	FD_SET (g_net.fd, &(g_net.active_fd_set));
 	select_server();
 }
