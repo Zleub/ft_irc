@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 19:30:18 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/18 03:51:53 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/18 22:22:35 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define IRC_H
 
 #include <libft.h>
-#include <ft_printf.h>
+#include <stdio.h>
 #include <netinet/ip.h>
 #include <arpa/inet.h>
 
@@ -40,7 +40,8 @@ enum							e_state
 	ONLINE,
 	PENDING,
 	WRITING,
-	TRANSIT
+	TRANSIT,
+	STATELEN
 };
 
 # define NICKNAME_SIZE 10
@@ -58,6 +59,10 @@ struct s_client
 t_client						g_clients[FD_SETSIZE];
 
 int								die(void);
+int								textReturn(char *text, int ret);
 void							debug_clients(void);
+void							debug_client(int fd);
+
+
 
 #endif

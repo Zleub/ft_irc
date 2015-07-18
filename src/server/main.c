@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 16:14:37 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/18 07:18:08 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/19 00:40:49 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,34 +24,25 @@ int		read_server(int fd)
 
 	ft_memset(buf, 0, CIRC_BUFSIZE - 1);
 	if (!(n = read(fd, buf, CIRC_BUFSIZE - 2)))
-	{
-		ft_putstr("EXIT WITHOUT TEXT\n");
-		return (0);
-	}
+		return textReturn("EXIT WITHOUT TEXT\n", 0);
 	else if (n < 0)
-	{
-		ft_putstr("read flag error\n");
-		return (0);
-	}
+		return textReturn("read flag error\n", 0);
 	else
 	{
 		if (n > CIRC_BUFSIZE - 1)
 			ft_putendl("Too long message for buffer ...\n");
+
 		write_buf(&(g_clients[fd].buf), buf, n);
 
-		// if (buf[n - 1] != '\n')
-		// {
-			if (g_clients[fd].state != TRANSIT && g_clients[fd].state != WRITING)
-				g_clients[fd].state = TRANSIT;
-			else
-				g_clients[fd].state = WRITING;
-		// }
+		if (g_clients[fd].state != TRANSIT && g_clients[fd].state != WRITING)
+			g_clients[fd].state = TRANSIT;
+		else
+			g_clients[fd].state = WRITING;
 
 		if (!ft_strcmp(buf, "debug\n") || !ft_strcmp(buf, "debug"))
 			debug_clients();
 		return (n);
 	}
-
 }
 
 void	accept_server(void)
@@ -66,15 +57,15 @@ void	accept_server(void)
 	g_clients[fd].id = g_net.client_nbr++;
 	ft_strcpy(g_clients[fd].nickname, "guest_");
 	ft_strcpy(g_clients[fd].nickname + 6, ft_itoa(g_net.client_nbr));
-	ft_printf("<-- NEW ENTRY %d -->\n", fd);
+	printf("<-- NEW ENTRY %d -->\n", fd);
 }
 
 void	do_i_have_something_to_do(int fd)
 {
 	// write(1, ( g_clients[fd].buf.buf + g_clients[fd].buf.head ), g_clients[fd].buf.tail - g_clients[fd].buf.head);
 	if (g_clients[fd].buf.buf[g_clients[fd].buf.head] == '/') {
-		ft_printf("I SHOULD NOT BE SEEING THIS\n");
-		g_clients[fd].buf.head = g_clients[fd].buf.tail - g_clients[fd].buf.head;
+		printf("I got a command : %s\n", &g_clients[fd].buf.buf[g_clients[fd].buf.head]);
+		// g_clients[fd].buf.head = g_clients[fd].buf.tail - g_clients[fd].buf.head;
 	}
 }
 
@@ -101,6 +92,9 @@ void	select_server(void)
 				}
 				else
 				{
+					int alloc_size = 0;
+					char *str = NULL;
+
 					do_i_have_something_to_do(i);
 					for(int j = 0; j <= FD_SETSIZE; j++) {
 						// send to everyone!
@@ -108,41 +102,51 @@ void	select_server(void)
 							// except the listener and ourselves
 							if (j != 0 && j != i && j != g_net.fd) {
 
-								char *str;
 
 								if (g_clients[i].state == TRANSIT)
 								{
-									int alloc_size = size_buf(&(g_clients[i].buf)) + LEN(g_clients[i].nickname) + 3;
+									alloc_size = size_buf(&(g_clients[i].buf)) + LEN(g_clients[i].nickname) + 3;
 									str = (char*)malloc(alloc_size);
 									ft_bzero(str, alloc_size);
-									// ft_printf("< -- >\n");
+									// printf("< -- >\n");
 									// debug_clients();
-									// ft_printf("log malloc size : (%d)%d\n", size_buf(&(g_clients[i].buf)), alloc_size);
+									// printf("log malloc size : (%d)%d\n", size_buf(&(g_clients[i].buf)), alloc_size);
 									ft_strcpy(str, g_clients[i].nickname);
-									ft_strcpy(str + LEN(g_clients[i].nickname), ": ");
+									ft_strcpy(str + LEN(g_clients[i].nickname), ":\t");
 
 									read_buf(str + LEN(g_clients[i].nickname) + 2, &(g_clients[i].buf));
 								}
 								else
 								{
+									alloc_size = size_buf(&(g_clients[i].buf));
 									str = (char*)malloc(size_buf(&(g_clients[i].buf)));
-									ft_bzero(str, size_buf(&(g_clients[i].buf)));
+									ft_bzero(str, size_buf(&(g_clients[i].buf)) + 1);
 
 									read_buf(str, &(g_clients[i].buf));
 								}
 
-								if (str[LEN(str) - 1] == '\n')
-									g_clients[i].state = ONLINE;
 
 								// ft_strndup((g_clients[i].buf.buf + g_clients[i].buf.head), g_clients[i].buf.tail - g_clients[i].buf.head);
 								if (send(j, str, LEN(str), 0) == -1) {
-									ft_printf("send error\n");
+									printf("send error\n");
 								}
 							}
 						}
 					}
-					// ft_printf("tok\n");
+
+					// int test = 0;
+					// while (test < alloc_size)
+					// {
+					// 	if (str[test] == '\n')
+					// 		g_clients[i].state = ONLINE;
+
+					// 	test += 1;
+					// }
+
+					if (g_clients[i].buf.buf[size_buf(&(g_clients[i].buf)) - 1] == '\n') //&& size_buf(&(g_clients[i].buf)) != CIRC_BUFSIZE - 2)
+						g_clients[i].state = ONLINE;
 					g_clients[i].buf.head = g_clients[i].buf.tail;
+
 				}
 			}
 		}
@@ -184,7 +188,7 @@ int		main(int ac, char *av[])
 		init_server(av[1]);
 		while (42) {
 			select_server();
-			// ft_printf("tik\n");
+			// printf("tik\n");
 			// debug_clients();
 		}
 	}
