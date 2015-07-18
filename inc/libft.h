@@ -6,28 +6,18 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/30 00:03:36 by adebray           #+#    #+#             */
-/*   Updated: 2015/01/19 18:58:41 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/17 22:03:51 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
+# include <utils.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <string.h>
 # include <stddef.h>
-
-# define LEN(x) ft_strlen(x)
-
-typedef struct		s_read
-{
-	int				size;
-	int				index;
-	int				fd;
-	char			*read;
-	struct s_read	*next;
-}					t_read;
 
 int					ft_abs(int x);
 void				print_array(char **map, int size);
@@ -89,5 +79,9 @@ char				*ft_strsub(char const *s, unsigned int start, size_t len);
 char				*ft_strtrim(char const *s);
 int					ft_tolower(int c);
 int					ft_toupper(int c);
+
+int					write_buf(struct s_circ_buf *ptr, char *mem, int size);
+int					read_buf(char *str, struct s_circ_buf *ptr);
+int					size_buf(struct s_circ_buf *ptr);
 
 #endif
