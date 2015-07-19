@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 16:14:37 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/19 00:40:49 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/19 08:25:56 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ void	select_server(void)
 							// except the listener and ourselves
 							if (j != 0 && j != i && j != g_net.fd) {
 
+								// debug_client(i);
 
 								if (g_clients[i].state == TRANSIT)
 								{
@@ -142,8 +143,13 @@ void	select_server(void)
 
 					// 	test += 1;
 					// }
+					int index = g_clients[i].buf.tail - 1;
+					if (index == -1)
+						index = CIRC_BUFSIZE - 2;
 
-					if (g_clients[i].buf.buf[size_buf(&(g_clients[i].buf)) - 1] == '\n') //&& size_buf(&(g_clients[i].buf)) != CIRC_BUFSIZE - 2)
+					printf("%s -- %d[%c]\n", g_clients[i].buf.buf, index, g_clients[i].buf.buf[index]);
+
+					if (g_clients[i].buf.buf[index] == '\n')// && size_buf(&(g_clients[i].buf)) != CIRC_BUFSIZE - 2)
 						g_clients[i].state = ONLINE;
 					g_clients[i].buf.head = g_clients[i].buf.tail;
 
@@ -157,7 +163,7 @@ void	init_server(char *port)
 {
 	if ((g_net.fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 		die();
-	ft_memset(&(g_net.my_addr), 0, sizeof(struct sockaddr_in));
+	___bzero(&(g_net.my_addr), sizeof(struct sockaddr_in));
 	g_net.my_addr.sin_family = AF_INET;
 	g_net.my_addr.sin_addr.s_addr = INADDR_ANY;
 	g_net.my_addr.sin_port = htons(ft_atoi(port));

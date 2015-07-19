@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 19:36:00 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/19 00:04:16 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/19 08:19:03 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ struct					s_read
 	struct s_read		*next;
 };
 
-#define CIRC_BUFSIZE 12
+#define CIRC_BUFSIZE 255
 
 struct					s_circ_buf
 {

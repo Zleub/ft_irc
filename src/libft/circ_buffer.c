@@ -6,22 +6,23 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 21:39:15 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/18 03:35:24 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/19 07:49:10 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
-#include <ft_printf.h>
 
 int		size_buf(struct s_circ_buf *ptr)
 {
 	int	i;
 	int	j;
 
-	if (ptr->tail == ptr->head)
+	if (ptr->tail == ptr->head) {
 		return (CIRC_BUFSIZE - 1);
-	else if (ptr->tail > ptr->head)
+	}
+	else if (ptr->tail > ptr->head) {
 		return (ptr->tail - ptr->head);
+	}
 	else
 	{
 		i = ptr->head;
