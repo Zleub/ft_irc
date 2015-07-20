@@ -6,17 +6,17 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 19:30:18 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/18 22:22:35 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/20 00:52:46 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef IRC_H
 # define IRC_H
 
-#include <libft.h>
-#include <stdio.h>
-#include <netinet/ip.h>
-#include <arpa/inet.h>
+# include <libft.h>
+# include <stdio.h>
+# include <netinet/ip.h>
+# include <arpa/inet.h>
 
 typedef struct sockaddr_in		t_sockin;
 typedef struct s_network		t_network;
@@ -46,7 +46,7 @@ enum							e_state
 
 # define NICKNAME_SIZE 10
 
-struct s_client
+struct							s_client
 {
 	int							id;
 	int							state;
@@ -59,10 +59,20 @@ struct s_client
 t_client						g_clients[FD_SETSIZE];
 
 int								die(void);
-int								textReturn(char *text, int ret);
+int								diewitherror(char *error);
+
+int								textreturn(char *text, int ret);
 void							debug_clients(void);
 void							debug_client(int fd);
 
+void							client_leave(int fd);
+int								client_write(int fd_talker, int fd_listener);
+int								client_read(int fd);
 
+typedef int						(*t_function)(int);
+typedef int						(*t_dfunction)(int, int);
+
+void							fd_iteration(int i, t_function f);
+void							fd_diteration(int i, int j, t_dfunction f);
 
 #endif

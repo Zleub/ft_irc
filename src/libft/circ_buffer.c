@@ -6,23 +6,21 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 21:39:15 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/19 07:49:10 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/20 00:41:15 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-int		size_buf(struct s_circ_buf *ptr)
+int		size_buf(t_circ_buf *ptr)
 {
 	int	i;
 	int	j;
 
-	if (ptr->tail == ptr->head) {
+	if (ptr->tail == ptr->head)
 		return (CIRC_BUFSIZE - 1);
-	}
-	else if (ptr->tail > ptr->head) {
+	else if (ptr->tail > ptr->head)
 		return (ptr->tail - ptr->head);
-	}
 	else
 	{
 		i = ptr->head;
@@ -36,25 +34,25 @@ int		size_buf(struct s_circ_buf *ptr)
 	}
 }
 
-int		write_buf(struct s_circ_buf *ptr, char *mem, int size)
+int		write_buf(t_circ_buf *ptr, char *mem, int size)
 {
-	int		i = 0;
+	int		i;
 
+	i = 0;
 	while (i < size)
 	{
 		ptr->buf[(i + ptr->head) % (CIRC_BUFSIZE - 1)] = mem[i];
 		i += 1;
 	}
 	ptr->tail = (i + ptr->head) % (CIRC_BUFSIZE - 1);
-	return i;
+	return (i);
 }
 
-int		read_buf(char *str, struct s_circ_buf *ptr)
+int		read_buf(char *str, t_circ_buf *ptr)
 {
 	int		i;
 	int		j;
-//	ft_strncpy(str + LEN(g_clients[i].nickname) + 2, (g_clients[i].buf.buf + g_clients[i].buf.head), g_clients[i].buf.tail - g_clients[i].buf.head);
-	// ft_printf("THIS IS READING ACCESS from %d to %d\n", ptr->head, ptr->tail);
+
 	if (ptr->tail > ptr->head)
 		ft_strncpy(str, (ptr->buf + ptr->head), ptr->tail - ptr->head);
 	else
@@ -68,6 +66,5 @@ int		read_buf(char *str, struct s_circ_buf *ptr)
 			j += 1;
 		}
 	}
-
 	return (0);
 }

@@ -1,40 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.h                                            :+:      :+:    :+:   */
+/*   fd_management.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/07/17 19:36:00 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/20 00:38:58 by adebray          ###   ########.fr       */
+/*   Created: 2015/07/20 00:29:25 by adebray           #+#    #+#             */
+/*   Updated: 2015/07/20 00:30:53 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#include <irc.h>
 
-# define LEN(x) ft_strlen(x)
-
-typedef struct s_read		t_read;
-
-struct						s_read
+void	fd_iteration(int i, t_function f)
 {
-	int						size;
-	int						index;
-	int						fd;
-	char					*read;
-	struct s_read			*next;
-};
+	if (i >= FD_SETSIZE)
+		return ;
+	else
+	{
+		f(i);
+		fd_iteration(i + 1, f);
+		return ;
+	}
+}
 
-# define CIRC_BUFSIZE 255
-
-typedef struct s_circ_buf	t_circ_buf;
-
-struct						s_circ_buf
+void	fd_diteration(int i, int j, t_dfunction f)
 {
-	char					buf[CIRC_BUFSIZE];
-	int						head;
-	int						tail;
-};
-
-#endif
+	if (j >= FD_SETSIZE)
+		return ;
+	else
+	{
+		f(i, j);
+		fd_diteration(i, j + 1, f);
+		return ;
+	}
+}
