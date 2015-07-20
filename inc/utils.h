@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 19:36:00 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/20 00:38:58 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/20 06:55:16 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ struct						s_read
 	struct s_read			*next;
 };
 
-# define CIRC_BUFSIZE 255
+# define CIRC_BUFSIZE 12
 
 typedef struct s_circ_buf	t_circ_buf;
 

@@ -6,15 +6,15 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 16:14:37 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/20 00:30:11 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/20 07:24:10 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <irc.h>
 
 struct timeval		g_timeout = {
-	2,
-	500000
+	0,
+	5000
 };
 
 void	accept_server(void)
@@ -32,20 +32,21 @@ void	accept_server(void)
 	printf("<-- NEW ENTRY %d -->\n", fd);
 }
 
-void	do_i_have_something_to_do(int fd)
+int		do_i_have_something_to_do(int fd)
 {
 	// write(1, ( g_clients[fd].buf.buf + g_clients[fd].buf.head ), g_clients[fd].buf.tail - g_clients[fd].buf.head);
 	if (g_clients[fd].buf.buf[g_clients[fd].buf.head] == '/') {
 		printf("I got a command : %s\n", &g_clients[fd].buf.buf[g_clients[fd].buf.head]);
-		// g_clients[fd].buf.head = g_clients[fd].buf.tail - g_clients[fd].buf.head;
+		g_clients[fd].buf.head = g_clients[fd].buf.tail;
+		return (0);
 	}
+	return (1);
 }
 
 void	do_business(int fd_talker)
 {
-
-	do_i_have_something_to_do(fd_talker);
-	fd_diteration(fd_talker, 0, &client_write);
+	if (do_i_have_something_to_do(fd_talker))
+		fd_diteration(fd_talker, 0, &client_write);
 
 	int index = g_clients[fd_talker].buf.tail - 1;
 	if (index == -1)
@@ -67,9 +68,8 @@ int		do_i_have_something_to_read(int fd)
 			if (!client_read(fd))
 				client_leave(fd);
 			else
-			{
+				debug_client(fd);
 				do_business(fd);
-			}
 		}
 	}
 	return (0);

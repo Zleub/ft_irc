@@ -6,14 +6,15 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 17:59:20 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/15 18:04:45 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/20 07:14:36 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
+#include <irc.h>
 
 int		main(void)
 {
-	ft_putstr("THIS IS AN EMPTY PROJECT\n");
+	printf("THIS IS AN EMPTY PROJECT\n");
 	return (0);
 }

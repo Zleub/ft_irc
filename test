@@ -1,0 +1,106 @@
+[?1049h[?12;25h[?1h=[50;1H[?25l----:---F1  [1m*scratch*   [0m   All L1     (Fundamental)--------------------------------------------------
+[A[H[?12l[?25h[?12;25h[H[2J[51d[?25lLoading encoded-kb...[K[H[?12l[?25h[?12;25h[51;22H[?25ldone[H[?12l[?25h[?12;25h[51d[K[?1l>[?12l[?25h[?1049l[39;49m[?1049h[?12;25h[?1h=[51;1H[?25lFor information about the GNU Project and its goals, type C-h C-p.[K[H
+[?12l[?25h[?12;25h[51d[?25lFor information about the GNU Project and its goals, type C-h C-p.[K[HWelcome to GNU Emacs, a part of the GNU operating system.[K
+[K
+Type C-l to begin editing.[K
+[K
+Get help           C-h  (Hold down CTRL and press h)[K
+Emacs manual       C-h r[K
+Emacs tutorial     C-h t           Undo changes     C-x u[K
+Buy manuals        C-h C-m         Exit Emacs       C-x C-c[K
+Browse manuals     C-h i[K
+Activate menubar   F10  or  ESC `  or   M-`[K
+(`C-' means use the CTRL key.  `M-' means use the Meta (or Alt) key.[K
+If you have no Meta key, you may instead type ESC followed by the character.)[K
+[K
+GNU Emacs 22.1.1 (mac-apple-darwin)[K
+ of 2015-05-31 on osx204.apple.com[K
+Copyright (C) 2007 Free Software Foundation, Inc.[K
+[K
+GNU Emacs comes with ABSOLUTELY NO WARRANTY; type C-h C-w for full details.[K
+Emacs is Free Software--Free as in Freedom--so you can redistribute copies[K
+of Emacs and modify it; type C-h C-c to see the conditions.[K
+Type C-h C-d for information on getting the latest version.[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[1m[30m[48;5;250m---- GNU Emacs --------------------------------------------------------------------------------------[0m[39;49m
+[A[H[?12l[?25h[?12;25h[51d[K[H[?25l[38;5;124m;; This buffer is for notes you don't want to save, and for Lisp evaluation.                         [39;49m
+[A
+[38;5;124m;; If you want to create a file, visit that file with C-x C-f,                                       [39;49m
+[A
+[38;5;124m;; then enter the text in that file's own buffer.                                                    [39;49m
+[A
+[K
+Q[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[30m[48;5;250m-uuu:**-F1  [39;49m[1m[30m[48;5;250m*scratch*   [0m[39;49m[30m[48;5;250m   All L5     (Lisp Interaction)---------------------------------------------[39;49m
+[A[5;2H[?12l[?25h[?12;25h[?25lu[?12l[?25h[?12;25h[?25lo[?12l[?25h[?12;25h[?25li[?12l[?25h[?12;25h[C[?25l?[?12l[?25h[?12;25h[50;33H[?25l[30m[48;5;250m6[39;49m[6;1H[?12l[?25h[?12;25h[51d[?25lC-c C-x C-c is undefined[6;1H[?12l[?25h[?12;25h[51d[K[6d[51d[?25l(No files need saving)[6;1H[?12l[?25h[?12;25h[51d[K[?1l>[?12l[?25h[?1049l[39;49m
