@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 16:14:37 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/20 18:24:59 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/21 09:14:32 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	accept_server(void)
 	tmp = ft_itoa(g_net.client_nbr);
 	ft_strcpy(g_clients[fd].nickname + 6, tmp);
 	free(tmp);
-	// printf("<-- NEW ENTRY %d -->\n", fd);
+	printf("<-- NEW ENTRY %d -->\n", fd);
 }
 
 int		do_i_have_something_to_do(int fd)

@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/19 22:49:14 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/20 18:10:28 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/21 09:14:43 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ int		client_read(int fd)
 
 	ft_memset(buf, 0, CIRC_BUFSIZE - 1);
 	if (!(n = read(fd, buf, CIRC_BUFSIZE - 2)))
-		return 0;
-		// return (textreturn("EXIT WITHOUT TEXT\n", 0));
+		return (textreturn("EXIT WITHOUT TEXT\n", 0));
+		// return 0;
 	else if (n < 0)
 		return (textreturn("read flag error\n", 0));
 	else
