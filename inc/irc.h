@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 19:30:18 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/20 17:53:15 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/22 01:20:55 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ struct							s_client
 {
 	int							id;
 	int							state;
+	char						*room;
 	char						nickname[NICKNAME_SIZE];
 	struct sockaddr				addr;
 	socklen_t					addr_size;

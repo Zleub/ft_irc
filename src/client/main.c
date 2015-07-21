@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 17:59:20 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/21 10:03:33 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/22 01:12:54 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,87 @@ int		diemsg(char *str)
 	exit(-1);
 }
 
+int		client_connect(char *str, int port)
+{
+	if (!ft_strcmp(str, "localhost"))
+		str = "127.0.0.1";
+	if (!port)
+		port = 6667;
+	if ((g_net.fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+		diemsg("socket");
+	g_net.my_addr.sin_family = AF_INET;
+	g_net.my_addr.sin_addr.s_addr = inet_addr(str);
+	g_net.my_addr.sin_port = htons(port);
+	if (connect(g_net.fd, (struct sockaddr *)&(g_net.my_addr), sizeof(g_net.my_addr)) == -1)
+	{
+		printf("Connection at %s:%d failed\n", str, port);
+		if (g_net.fd != 0)
+		{
+			close(g_net.fd);
+			g_net.fd = 0;
+		}
+		return (0);
+	}
+	FD_SET (g_net.fd, &(g_net.active_fd_set));
+	FD_SET (0, &(g_net.active_fd_set));
+	printf("Connected to %s:%d\n", str, port);
+	return (0);
+}
+
+int		get_size(char *str)
+{
+	int i;
+
+	i = 0;
+	while (!ft_isspace(str[i]))
+		i += 1;
+	return (i);
+}
+
+void	fill_array(char *str, char **str_array)
+{
+	int i;
+	int j;
+
+	i = 2;
+	j = 0;
+	(void)str_array;
+	while (i < (int)LEN(str))
+	{
+		if (ft_isspace(str[i - 1]) && !ft_isspace(str[i])) {
+			if (j < 2) {
+				str_array[j] = ft_strndup(&str[i], get_size(&str[i]));
+			}
+			j += 1;
+		}
+		i += 1;
+	}
+}
+
 int		client_work(int fd)
 {
-	char buf[1024];
+	char *buf_array[2];
+	char buf[CIRC_BUFSIZE];
 
-	ft_bzero(buf, 1024);
+	ft_bzero(buf, CIRC_BUFSIZE - 1);
 	if (FD_ISSET (fd, &(g_net.read_fd_set)))
 	{
-		read(fd, &buf, 1024);
-		printf("read: %s\n", buf);
-		ft_bzero(buf, 1024);
+		if (read(fd, &buf, CIRC_BUFSIZE - 1))
+		{
+			if (g_net.fd == 0)
+			{
+				if (!ft_strncmp(buf, "/connect", LEN("/connect")))
+				{
+					fill_array(buf, buf_array);
+					client_connect(buf_array[0], ft_atoi(buf_array[1]));
+				}
+				return (0);
+			}
+			if (fd == 0)
+				write(g_net.fd, buf, LEN(buf));
+			else
+				write(0, buf, LEN(buf));
+		}
 	}
 	return (0);
 }
@@ -45,25 +116,41 @@ void	select_client(void)
 {
 	g_net.read_fd_set = g_net.active_fd_set;
 	g_net.write_fd_set = g_net.active_fd_set;
-	if (select (FD_SETSIZE, &(g_net.read_fd_set), &(g_net.write_fd_set), NULL, &g_timeout) < 0)
+	if (select (FD_SETSIZE, &(g_net.read_fd_set), NULL, NULL, &g_timeout) < 0)
 		diemsg("select");
 
 	fd_iteration(0, &client_work);
 }
 
-int		main(void)
+void	write_header()
 {
+	printf("                ,     :     ,\n");
+	printf("          '.    ;    :    ;    ,`\n");
+	printf("      '-.   '.   ;   :   ;   ,`   ,-`\n");
+	printf("   \"-.   '-.  '.  ;  :  ;  ,`  ,-`   ,-\"\n");
+	printf("      \"-.   '-. '. ; : ; ,` ,-`   ,-\"\n");
+	printf(" '\"--.   '\"-.  '-.'  '  `.-`  ,-\"`   ,--\"`\n");
+	printf("      '\"--.  '\"-.   ...   ,-\"`  ,--\"`\n");
+	printf("           '\"--.  .:::::.  ,--\"`\n");
+	printf("------------------:::::::------------------\n");
+	printf("                   ~~~~~\n                    ~~~\n");
+	printf("                     ~\n");
+	printf("\n");
+	printf("           IRC SUNRISE WooOT\n");
+}
 
+int		main(int argc, char **argv)
+{
+	(void)argc;
+	(void)argv;
+	write_header();
 	ft_bzero(&g_net, sizeof(g_net));
-	if ((g_net.fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
-		diemsg("socket");
-	g_net.my_addr.sin_family = AF_INET;
-	g_net.my_addr.sin_addr.s_addr = INADDR_ANY;
-	g_net.my_addr.sin_port = htons(ft_atoi("4242"));
-	if (connect(g_net.fd, (struct sockaddr *)&(g_net.my_addr), sizeof(g_net.my_addr)) == -1)
-		diemsg("connect");
-	FD_SET (g_net.fd, &(g_net.active_fd_set));
-	FD_SET (0, &(g_net.active_fd_set));
+	if (argc == 3)
+		client_connect(argv[1], ft_atoi(argv[2]));
+	else if (argc == 2)
+		client_connect(argv[1], 6667);
+	else
+		FD_SET (0, &(g_net.active_fd_set));
 	while (42)
 		select_client();
 	return (0);

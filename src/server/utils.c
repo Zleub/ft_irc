@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 21:40:40 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/20 00:58:27 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/22 01:29:26 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ char	*g_array[STATELEN] = {
 	"ONLINE",
 	"PENDING",
 	"WRITING",
-	"TRANSIT"
+	"TRANSIT",
+	"COMMAND"
 };
 
 int		die(void)

@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 16:14:37 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/21 09:14:32 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/22 01:26:13 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,20 @@ int		do_i_have_something_to_do(int fd)
 {
 	char		test[COMMAND_BUFSIZE];
 
-	if (g_clients[fd].buf.buf[g_clients[fd].buf.head] == '/' && g_clients[fd].state != WRITING && g_clients[fd].state != COMMAND)
+	debug_client(fd);
+	if (g_clients[fd].buf.buf[g_clients[fd].buf.head] == '/'
+		&& g_clients[fd].state != WRITING && g_clients[fd].state != COMMAND)
 	{
 		ft_bzero(test, COMMAND_BUFSIZE);
 		g_clients[fd].state = COMMAND;
 	}
-	// write(1, ( g_clients[fd].buf.buf + g_clients[fd].buf.head ), g_clients[fd].buf.tail - g_clients[fd].buf.head);
 	if (g_clients[fd].state == COMMAND) {
 		if (LEN(test) == 0)
 			read_buf(test, &g_clients[fd].buf);
 		else
 			read_buf(&test[LEN(test)], &g_clients[fd].buf);
 		printf("I got a command : %s\n", test);
-		// g_clients[fd].buf.head = g_clients[fd].buf.tail;
+
 		return (0);
 	}
 	return (1);
@@ -66,8 +67,9 @@ void	do_business(int fd_talker)
 	if (index == -1)
 		index = CIRC_BUFSIZE - 2;
 
-	if (g_clients[fd_talker].buf.buf[index] == '\n')// && size_buf(&(g_clients[i].buf)) != CIRC_BUFSIZE - 2)
+	if (g_clients[fd_talker].buf.buf[index] == '\n')
 		g_clients[fd_talker].state = ONLINE;
+	debug_client(fd_talker);
 	g_clients[fd_talker].buf.head = g_clients[fd_talker].buf.tail;
 }
 
@@ -81,10 +83,8 @@ int		do_i_have_something_to_read(int fd)
 		{
 			if (!client_read(fd))
 				client_leave(fd);
-			else {
-				// debug_client(fd);
+			else
 				do_business(fd);
-			}
 		}
 	}
 	return (0);
@@ -126,18 +126,16 @@ int		main(int ac, char *av[])
 	for (int i = 0; i < FD_SETSIZE; ++i)
 	{
 		g_clients[i].id = 0;
+		g_clients[i].room = 0;
 		g_clients[i].state = OFFLINE;
 		g_clients[i].buf.head = 0;
 		g_clients[i].buf.tail = 0;
 	}
-	if (ac == 2) {
-		debug_clients();
+	if (ac < 2)
+		init_server("6667");
+	else if (ac < 3)
 		init_server(av[1]);
-		while (42) {
-			select_server();
-			// printf("tik\n");
-			// debug_clients();
-		}
-	}
+	while (42)
+		select_server();
 	return (0);
 }
