@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 16:14:37 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/20 07:24:10 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/20 18:24:59 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ struct timeval		g_timeout = {
 
 void	accept_server(void)
 {
+	char	*tmp;
 	int		fd;
 
 	fd = 0;
@@ -28,16 +29,29 @@ void	accept_server(void)
 	g_clients[fd].state = ONLINE;
 	g_clients[fd].id = g_net.client_nbr++;
 	ft_strcpy(g_clients[fd].nickname, "guest_");
-	ft_strcpy(g_clients[fd].nickname + 6, ft_itoa(g_net.client_nbr));
-	printf("<-- NEW ENTRY %d -->\n", fd);
+	tmp = ft_itoa(g_net.client_nbr);
+	ft_strcpy(g_clients[fd].nickname + 6, tmp);
+	free(tmp);
+	// printf("<-- NEW ENTRY %d -->\n", fd);
 }
 
 int		do_i_have_something_to_do(int fd)
 {
+	char		test[COMMAND_BUFSIZE];
+
+	if (g_clients[fd].buf.buf[g_clients[fd].buf.head] == '/' && g_clients[fd].state != WRITING && g_clients[fd].state != COMMAND)
+	{
+		ft_bzero(test, COMMAND_BUFSIZE);
+		g_clients[fd].state = COMMAND;
+	}
 	// write(1, ( g_clients[fd].buf.buf + g_clients[fd].buf.head ), g_clients[fd].buf.tail - g_clients[fd].buf.head);
-	if (g_clients[fd].buf.buf[g_clients[fd].buf.head] == '/') {
-		printf("I got a command : %s\n", &g_clients[fd].buf.buf[g_clients[fd].buf.head]);
-		g_clients[fd].buf.head = g_clients[fd].buf.tail;
+	if (g_clients[fd].state == COMMAND) {
+		if (LEN(test) == 0)
+			read_buf(test, &g_clients[fd].buf);
+		else
+			read_buf(&test[LEN(test)], &g_clients[fd].buf);
+		printf("I got a command : %s\n", test);
+		// g_clients[fd].buf.head = g_clients[fd].buf.tail;
 		return (0);
 	}
 	return (1);
@@ -67,9 +81,10 @@ int		do_i_have_something_to_read(int fd)
 		{
 			if (!client_read(fd))
 				client_leave(fd);
-			else
-				debug_client(fd);
+			else {
+				// debug_client(fd);
 				do_business(fd);
+			}
 		}
 	}
 	return (0);

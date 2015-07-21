@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 19:30:18 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/20 00:52:46 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/20 17:53:15 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ enum							e_state
 	PENDING,
 	WRITING,
 	TRANSIT,
+	COMMAND,
 	STATELEN
 };
 
