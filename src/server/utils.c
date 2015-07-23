@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 21:40:40 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/22 01:29:26 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/23 01:03:47 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 char	*g_array[STATELEN] = {
 	"OFFLINE",
-	"ONLINE",
 	"PENDING",
+	"ONLINE",
 	"WRITING",
 	"TRANSIT",
 	"COMMAND"

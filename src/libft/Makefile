@@ -19,7 +19,7 @@ SRC			=	$(shell ls | grep ".c")
 OBJ			=	$(subst .c,.o,$(SRC))
 
 CC			=	gcc
-CCFLAGS		=	-Werror -Wall -Wextra -Wuninitialized -O3 -g
+CCFLAGS		?=	-Werror -Wall -Wextra -Wuninitialized -O3 -g
 
 all: $(NAME)
 

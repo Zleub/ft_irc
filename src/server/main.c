@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 16:14:37 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/22 01:26:13 by adebray          ###   ########.fr       */
+/*   Updated: 2015/07/23 02:26:36 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,11 @@ void	accept_server(void)
 	int		fd;
 
 	fd = 0;
-	if ((fd = accept(g_net.fd, &(g_clients[fd].addr), &(g_clients[fd].addr_size))) == -1)
+	if ((fd = accept(g_net.fd, &(g_clients[fd].addr),
+		&(g_clients[fd].addr_size))) == -1)
 		die();
 	FD_SET(fd, &(g_net.active_fd_set));
-	g_clients[fd].state = ONLINE;
+	g_clients[fd].state = PENDING;
 	g_clients[fd].id = g_net.client_nbr++;
 	ft_strcpy(g_clients[fd].nickname, "guest_");
 	tmp = ft_itoa(g_net.client_nbr);
@@ -35,41 +36,23 @@ void	accept_server(void)
 	printf("<-- NEW ENTRY %d -->\n", fd);
 }
 
-int		do_i_have_something_to_do(int fd)
-{
-	char		test[COMMAND_BUFSIZE];
-
-	debug_client(fd);
-	if (g_clients[fd].buf.buf[g_clients[fd].buf.head] == '/'
-		&& g_clients[fd].state != WRITING && g_clients[fd].state != COMMAND)
-	{
-		ft_bzero(test, COMMAND_BUFSIZE);
-		g_clients[fd].state = COMMAND;
-	}
-	if (g_clients[fd].state == COMMAND) {
-		if (LEN(test) == 0)
-			read_buf(test, &g_clients[fd].buf);
-		else
-			read_buf(&test[LEN(test)], &g_clients[fd].buf);
-		printf("I got a command : %s\n", test);
-
-		return (0);
-	}
-	return (1);
-}
-
 void	do_business(int fd_talker)
 {
+	int state;
+	int index;
+
+	// debug_client(fd_talker);
+	state = g_clients[fd_talker].state;
 	if (do_i_have_something_to_do(fd_talker))
 		fd_diteration(fd_talker, 0, &client_write);
-
-	int index = g_clients[fd_talker].buf.tail - 1;
+	index = g_clients[fd_talker].buf.tail - 1;
 	if (index == -1)
 		index = CIRC_BUFSIZE - 2;
-
-	if (g_clients[fd_talker].buf.buf[index] == '\n')
+	if (g_clients[fd_talker].state == COMMAND && state == PENDING)
+		g_clients[fd_talker].state = state;
+	else if (g_clients[fd_talker].state > PENDING
+		&& g_clients[fd_talker].buf.buf[index] == '\n')
 		g_clients[fd_talker].state = ONLINE;
-	debug_client(fd_talker);
 	g_clients[fd_talker].buf.head = g_clients[fd_talker].buf.tail;
 }
 
@@ -94,9 +77,9 @@ void	select_server(void)
 {
 	g_net.read_fd_set = g_net.active_fd_set;
 	g_net.write_fd_set = g_net.active_fd_set;
-	if (select (FD_SETSIZE, &(g_net.read_fd_set), &(g_net.write_fd_set), NULL, &g_timeout) < 0)
+	if (select (FD_SETSIZE, &(g_net.read_fd_set), &(g_net.write_fd_set),
+		NULL, &g_timeout) < 0)
 		die();
-
 	fd_iteration(0, &do_i_have_something_to_read);
 }
 
@@ -108,7 +91,8 @@ void	init_server(char *port)
 	g_net.my_addr.sin_family = AF_INET;
 	g_net.my_addr.sin_addr.s_addr = INADDR_ANY;
 	g_net.my_addr.sin_port = htons(ft_atoi(port));
-	if (bind(g_net.fd, (struct sockaddr *)&(g_net.my_addr), sizeof(struct sockaddr_in)) == -1)
+	if (bind(g_net.fd, (struct sockaddr *)&(g_net.my_addr),
+		sizeof(struct sockaddr_in)) == -1)
 		die();
 	if (listen(g_net.fd, 0) == -1)
 		die();
@@ -123,19 +107,13 @@ int		main(int ac, char *av[])
 {
 	ft_memset(&g_net, 0, sizeof(g_net));
 	ft_memset(&g_clients, 0, sizeof(g_clients));
-	for (int i = 0; i < FD_SETSIZE; ++i)
-	{
-		g_clients[i].id = 0;
-		g_clients[i].room = 0;
-		g_clients[i].state = OFFLINE;
-		g_clients[i].buf.head = 0;
-		g_clients[i].buf.tail = 0;
-	}
 	if (ac < 2)
 		init_server("6667");
 	else if (ac < 3)
 		init_server(av[1]);
-	while (42)
+	while (42) {
+		debug_clients();
 		select_server();
+	}
 	return (0);
 }
