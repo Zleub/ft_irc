@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/19 22:49:14 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/23 02:07:01 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/03 08:53:25 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ int		client_write(int fd_talk, int fd_listen)
 	if (FD_ISSET(fd_listen, &(g_net.write_fd_set)))
 	{
 		if (talker->state > PENDING && fd_listen != 0
-			//&& fd_listen != fd_talk
-			&& fd_listen != g_net.fd &&
-			!strcmp(g_clients[fd_talk].room, g_clients[fd_listen].room))
+			// && fd_listen != fd_talk
+			&& fd_listen != g_net.fd
+			&& !strcmp(g_clients[fd_talk].room, g_clients[fd_listen].room))
 		{
 			if (talker->state == TRANSIT)
 			{

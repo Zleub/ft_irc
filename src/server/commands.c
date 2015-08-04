@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/22 21:09:56 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/23 02:30:20 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/03 08:50:35 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,18 @@ int		join_function(int fd, char *str)
 {
 	char *array[1];
 
-	(void)fd;
 	fill_array(str, array);
 	if (array[0])
 		ft_strncpy(g_clients[fd].room, array[0], ROOMNAME_SIZE - 1);
 	g_clients[fd].state = ONLINE;
+	return (0);
+}
+
+int		leave_function(int fd, char *str)
+{
+	(void)str;
+	ft_bzero(g_clients[fd].room, ROOMNAME_SIZE);
+	g_clients[fd].state = PENDING;
 	return (0);
 }
 

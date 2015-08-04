@@ -6,12 +6,13 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 17:59:20 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/22 20:32:13 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/03 17:21:15 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 #include <irc.h>
+#include <curses.h>
 
 t_network		g_net;
 
@@ -43,7 +44,6 @@ int		client_connect(char *str, int port)
 		return (0);
 	}
 	FD_SET (g_net.fd, &(g_net.active_fd_set));
-	FD_SET (0, &(g_net.active_fd_set));
 	printf("Connected to %s:%d\n", str, port);
 	return (0);
 }
@@ -70,29 +70,39 @@ void	fill_array(char *str, char **str_array)
 
 int		client_work(int fd)
 {
-	char *buf_array[2];
-	char buf[CIRC_BUFSIZE];
+	(void)fd;
+	char ch = getch();
+	printw("'%c'", ch);
+	// char *buf_array[2];
+	// char buf[CIRC_BUFSIZE];
 
-	ft_bzero(buf, CIRC_BUFSIZE - 1);
-	if (FD_ISSET (fd, &(g_net.read_fd_set)))
-	{
-		if (read(fd, &buf, CIRC_BUFSIZE - 1))
-		{
-			if (g_net.fd == 0)
-			{
-				if (!ft_strncmp(buf, "/connect", LEN("/connect")))
-				{
-					fill_array(buf, buf_array);
-					client_connect(buf_array[0], ft_atoi(buf_array[1]));
-				}
-				return (0);
-			}
-			if (fd == 0)
-				write(g_net.fd, buf, LEN(buf));
-			else
-				write(0, buf, LEN(buf));
-		}
-	}
+	// ft_bzero(buf, CIRC_BUFSIZE - 1);
+	// if (FD_ISSET (fd, &(g_net.read_fd_set)))
+	// {
+
+		// if (read(fd, &buf, CIRC_BUFSIZE - 1))
+		// {
+		// 	if (buf[LEN(buf) - 2] == 4) {
+		// 		printf("it's a dawn ^D, disconnect from server\n");
+		// 		close(g_net.fd);
+		// 		endwin();
+		// 		exit (0);
+		// 	}
+		// 	if (g_net.fd == 0)
+		// 	{
+		// 		if (!ft_strncmp(buf, "/connect", LEN("/connect")))
+		// 		{
+		// 			fill_array(buf, buf_array);
+		// 			client_connect(buf_array[0], ft_atoi(buf_array[1]));
+		// 		}
+		// 		return (0);
+		// 	}
+		// 	if (fd == 0)
+		// 		write(g_net.fd, buf, LEN(buf));
+		// 	else
+		// 		printw("%s", buf);
+		// }
+	// }
 	return (0);
 }
 
@@ -107,17 +117,32 @@ void	select_client(void)
 
 int		main(int argc, char **argv)
 {
-	(void)argc;
-	(void)argv;
+	initscr();
+	cbreak();
+	noecho();
+	nonl();
+	intrflush(stdscr, FALSE);
+	keypad(stdscr, TRUE);
+
 	write_header();
 	ft_bzero(&g_net, sizeof(g_net));
+
+	WINDOW * local_win = newwin(0, 0, 10, 10);
+	box(local_win, 0, 0);
+	wrefresh(local_win);
+	refresh();
+
+	FD_SET (0, &(g_net.active_fd_set));
 	if (argc == 3)
 		client_connect(argv[1], ft_atoi(argv[2]));
 	else if (argc == 2)
 		client_connect(argv[1], 6667);
-	else
-		FD_SET (0, &(g_net.active_fd_set));
-	while (42)
-		select_client();
+	while (42) {
+		fflush(stdout);
+		fflush(stdin);
+		// select_client();
+		refresh();
+	}
+	endwin();
 	return (0);
 }

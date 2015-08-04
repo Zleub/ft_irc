@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/22 21:07:13 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/22 22:37:44 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/03 08:49:11 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 t_command	g_commands[COMMAND_SETSIZE] = {
 	{"nick", &nick_function},
 	{"join", &join_function},
-	{"leave", &function_test},
+	{"leave", &leave_function},
 	{"who", &function_test},
 	{"msg", &function_test},
 };

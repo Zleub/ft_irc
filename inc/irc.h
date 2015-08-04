@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 19:30:18 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/22 22:51:37 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/03 08:50:20 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdio.h>
 # include <netinet/ip.h>
 # include <arpa/inet.h>
+# include <signal.h>
 
 typedef struct sockaddr_in		t_sockin;
 typedef struct s_network		t_network;
@@ -94,5 +95,6 @@ int								do_command(int fd, char *str);
 int								function_test(int fd, char *str);
 int								nick_function(int fd, char *str);
 int								join_function(int fd, char *str);
+int								leave_function(int fd, char *str);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: adebray <adebray@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/10/02 03:26:29 by adebray           #+#    #+#              #
-#    Updated: 2015/07/23 02:32:00 by adebray          ###   ########.fr        #
+#    Updated: 2015/08/03 09:05:28 by adebray          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ CLI_OBJ			=	$(subst .c,.o,$(CLI_SRC))
 CC				=	clang
 export CCFLAGS	=	-Werror -Wall -Wextra -Wuninitialized -Wpedantic -g
 
-LIBLIBFT		=	-L$(SRCDIR)/libft -lft
+LIBLIBFT		=	-L$(SRCDIR)/libft -lft -lncurses
 LIBESSENTIAL	=	$(LIBLIBFT)
 
 .PHONY: all clean fclean re $(NAME) asm

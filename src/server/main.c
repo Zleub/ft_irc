@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 16:14:37 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/23 02:26:36 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/03 08:36:29 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void	do_business(int fd_talker)
 	int state;
 	int index;
 
-	// debug_client(fd_talker);
 	state = g_clients[fd_talker].state;
 	if (do_i_have_something_to_do(fd_talker))
 		fd_diteration(fd_talker, 0, &client_write);
@@ -97,22 +96,44 @@ void	init_server(char *port)
 	if (listen(g_net.fd, 0) == -1)
 		die();
 	FD_ZERO (&(g_net.active_fd_set));
+	FD_ZERO (&(g_net.write_fd_set));
+	FD_ZERO (&(g_net.read_fd_set));
 	FD_SET (g_net.fd, &(g_net.active_fd_set));
 	FD_SET (0, &(g_net.active_fd_set));
 	g_clients[0].state = ONLINE;
 	select_server();
 }
 
+void	__test(int sig)
+{
+	char s[2];
+	int i;
+
+	i = 0;
+	s[0] = 4;
+	s[1] = '\n';
+	(void)sig;
+	while (i < FD_SETSIZE)
+	{
+		if ( FD_ISSET(i, &(g_net.write_fd_set)) )
+			send(i, s, 2, 0);
+		i += 1;
+	}
+	close(g_net.fd);
+	exit(0);
+}
+
 int		main(int ac, char *av[])
 {
 	ft_memset(&g_net, 0, sizeof(g_net));
 	ft_memset(&g_clients, 0, sizeof(g_clients));
+	signal(SIGINT, &__test);
 	if (ac < 2)
 		init_server("6667");
 	else if (ac < 3)
 		init_server(av[1]);
 	while (42) {
-		debug_clients();
+		// debug_clients();
 		select_server();
 	}
 	return (0);
