@@ -6,13 +6,14 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 17:59:20 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/04 14:14:15 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/09 16:37:23 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 #include <irc.h>
 #include <curses.h>
+#include <errno.h>
 
 t_network		g_net;
 
@@ -46,7 +47,8 @@ int		client_connect(char *str, int port)
 		sizeof(g_net.my_addr)) == -1)
 	{
 //		INFO MANAGEMENT
-//		printf("Connection at %s:%d failed\n", str, port);
+		// printw("Connection at %s:%d failed\n", str, port);
+		client_quit("HEREIAM");
 		if (g_net.fd != 0)
 		{
 			close(g_net.fd);
@@ -54,6 +56,7 @@ int		client_connect(char *str, int port)
 		}
 		return (0);
 	}
+	// client_quit(ft_itoa(g_net.fd));
 	FD_SET (g_net.fd, &(g_net.active_fd_set));
 //	INFO MANAGEMENT
 //	printf("Connected to %s:%d\n", str, port);
@@ -88,37 +91,21 @@ int		client_work(int fd)
 	// printw("'%s'\n", str);
 
 	// char *buf_array[2];
-	// char buf[CIRC_BUFSIZE];
+	char buf[CIRC_BUFSIZE - 1];
 
-	// ft_bzero(buf, CIRC_BUFSIZE - 1);
-	write(fd, "/join test\n", 11);
-	write(fd, "caca\n", 5);
+	ft_bzero(buf, CIRC_BUFSIZE - 1);
 	if (FD_ISSET (fd, &(g_net.read_fd_set)))
 	{
-		printw("test\n");
-	// 	if (read(fd, &buf, CIRC_BUFSIZE - 1))
-	// 	{
-	// 		if (buf[LEN(buf) - 2] == 4) {
-	// 			printf("it's a dawn ^D, disconnect from server\n");
-	// 			close(g_net.fd);
-	// 			endwin();
-	// 			exit (0);
-	// 		}
-	// 		if (g_net.fd == 0)
-	// 		{
-	// 			if (!ft_strncmp(buf, "/connect", LEN("/connect")))
-	// 			{
-	// 				fill_array(buf, buf_array);
-	// 				client_connect(buf_array[0], ft_atoi(buf_array[1]));
-	// 			}
-	// 			return (0);
-	// 		}
-	// 		if (fd == 0)
-	// 			write(g_net.fd, buf, LEN(buf));
-	// 		else
-	// 			printw("%s", buf);
-	// 	}
+		if (fd == 0) { // INPUT FORM NCURSES
+			int nbr = getch();
+			mvprintw(fd, 0, "%d: %d\n", fd, nbr);
+		} else {
+			int ret = read(fd, &buf, CIRC_BUFSIZE - 2);
+			(void)ret;
+			mvprintw(fd, 0, "%d: %s\n", fd, buf);
+		}
 	}
+
 	return (0);
 }
 
@@ -139,6 +126,7 @@ int		main(int argc, char **argv)
 	nonl();
 	intrflush(stdscr, FALSE);
 	keypad(stdscr, TRUE);
+	timeout(0);
 
 	write_header();
 	ft_bzero(&g_net, sizeof(g_net));
@@ -149,16 +137,23 @@ int		main(int argc, char **argv)
 	refresh();
 
 	FD_SET (0, &(g_net.active_fd_set));
+
 	if (argc == 3)
 		client_connect(argv[1], ft_atoi(argv[2]));
 	else if (argc == 2)
 		client_connect(argv[1], 6667);
+
+	// printw("%d\n", g_net.fd);
+	printw("-> %d\n", write(g_net.fd, "/join test\n", 11));
+	printw("-> %d\n", write(g_net.fd, "caca\n", 5));
+
+	// client_quit(ft_itoa(g_net.fd));
 	while (42) {
-		// fflush(stdin);
-		select_client();
 		// fflush(stdout);
+		// fflush(stdin);
 		refresh();
+		select_client();
 	}
-	endwin();
+	client_quit(NULL);
 	return (0);
 }

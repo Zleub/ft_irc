@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/22 21:07:13 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/03 08:49:11 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/09 16:48:50 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int		do_command(int fd, char *str)
 	int i;
 
 	i = 0;
+	printf("do_command call : %d, %s\n", fd, str);
 	while (i < COMMAND_SETSIZE)
 	{
 		if (!ft_strncmp(str + 1, g_commands[i].id, LEN(g_commands[i].id)))

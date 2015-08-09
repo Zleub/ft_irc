@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/19 22:49:14 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/04 14:36:42 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/09 19:41:53 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ int		client_read(int fd)
 	{
 		if (n > CIRC_BUFSIZE - 1)
 			ft_putendl("Too long message for buffer ...\n");
-		printf("test 1\n");
+
+		// printf("test READ : %s\n", buf);
 		write_buf(&(g_clients[fd].buf), buf, n);
 		if (g_clients[fd].state == COMMAND || g_clients[fd].state == PENDING)
 			;
@@ -74,7 +75,7 @@ int		client_read(int fd)
 		// debug_client(fd);
 		if (fd == 0 && !ft_strcmp(buf, "debug\n"))
 			debug_clients();
-		printf("test 2\n");
+		// printf("test 2\n");
 		return (n);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 16:14:37 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/03 08:36:29 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/09 22:16:56 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,13 @@ void	do_business(int fd_talker)
 	else if (g_clients[fd_talker].state > PENDING
 		&& g_clients[fd_talker].buf.buf[index] == '\n')
 		g_clients[fd_talker].state = ONLINE;
-	g_clients[fd_talker].buf.head = g_clients[fd_talker].buf.tail;
+
+	t_circ_buf buffer = g_clients[fd_talker].buf;
+	int i = g_clients[fd_talker].buf.head;
+
+	while (buffer.buf[buffer.head] != '\n')
+		i = (i + 1) % (CIRC_BUFSIZE - 1);
+	buffer.head = i;
 }
 
 int		do_i_have_something_to_read(int fd)
@@ -90,6 +96,11 @@ void	init_server(char *port)
 	g_net.my_addr.sin_family = AF_INET;
 	g_net.my_addr.sin_addr.s_addr = INADDR_ANY;
 	g_net.my_addr.sin_port = htons(ft_atoi(port));
+
+	int option = 1;
+	if(setsockopt(g_net.fd,SOL_SOCKET,(SO_REUSEADDR), &option, sizeof(option)) < 0)
+		die();
+
 	if (bind(g_net.fd, (struct sockaddr *)&(g_net.my_addr),
 		sizeof(struct sockaddr_in)) == -1)
 		die();
@@ -109,14 +120,15 @@ void	__test(int sig)
 	char s[2];
 	int i;
 
-	i = 0;
+	i = 3;
 	s[0] = 4;
-	s[1] = '\n';
+	s[1] = 10;
 	(void)sig;
+	printf("Im here\n");
 	while (i < FD_SETSIZE)
 	{
-		if ( FD_ISSET(i, &(g_net.write_fd_set)) )
-			send(i, s, 2, 0);
+		// write(i, s, 2);
+		close(i);
 		i += 1;
 	}
 	close(g_net.fd);

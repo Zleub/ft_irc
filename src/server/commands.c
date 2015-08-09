@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/22 21:09:56 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/03 08:50:35 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/09 16:44:04 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int		get_size(char *str)
 	return (i);
 }
 
-void	fill_array(char *str, char **str_array)
+void	fill_array(char *str, char **str_array, int n)
 {
 	int i;
 	int j;
@@ -34,7 +34,7 @@ void	fill_array(char *str, char **str_array)
 	{
 		if (ft_isspace(str[i - 1]) && !ft_isspace(str[i]))
 		{
-			if (j < 2)
+			if (j < n)
 				str_array[j] = ft_strndup(&str[i], get_size(&str[i]));
 			j += 1;
 		}
@@ -42,12 +42,14 @@ void	fill_array(char *str, char **str_array)
 	}
 }
 
+#define ONE_PARAM 1
+
 int		nick_function(int fd, char *str)
 {
-	char *array[1];
+	char *array[ONE_PARAM];
 
 	ft_bzero(array, sizeof(array));
-	fill_array(str, array);
+	fill_array(str, array, ONE_PARAM);
 	if (array[0])
 		ft_strncpy(g_clients[fd].nickname, array[0], NICKNAME_SIZE - 1);
 	return (0);
@@ -55,11 +57,13 @@ int		nick_function(int fd, char *str)
 
 int		join_function(int fd, char *str)
 {
-	char *array[1];
+	char *array[ONE_PARAM];
 
-	fill_array(str, array);
-	if (array[0])
+	fill_array(str, array, ONE_PARAM);
+	if (array[0]) {
+		printf("%s\n", array[0]);
 		ft_strncpy(g_clients[fd].room, array[0], ROOMNAME_SIZE - 1);
+	}
 	g_clients[fd].state = ONLINE;
 	return (0);
 }
