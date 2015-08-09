@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 21:39:15 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/09 22:03:33 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/09 22:27:16 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,31 @@ int		read_buf(char *str, t_circ_buf *ptr)
 {
 	int		i;
 	int		j;
+	int		n;
 
+	n = 0;
+	while (ptr->buf[ptr->head + n] != '\n')
+		n = (n + 1) % (CIRC_BUFSIZE - 1);
+	if (n < ptr->tail - ptr->head)
+	{
+	 	ft_strncpy(str, (ptr->buf + ptr->head), n);
+	 	return (n);
+	}
 	if (ptr->tail > ptr->head)
+	{
 		ft_strncpy(str, (ptr->buf + ptr->head), ptr->tail - ptr->head);
+		return (ptr->tail - ptr->head);
+	}
 	else
 	{
 		i = ptr->head;
 		j = 0;
-		while (i % (CIRC_BUFSIZE - 1) != ptr->tail)
+		while (i % (CIRC_BUFSIZE - 1) != ptr->tail && ptr->buf[i % (CIRC_BUFSIZE - 1)] != '\n')
 		{
 			str[j] = ptr->buf[i % (CIRC_BUFSIZE - 1)];
 			i += 1;
 			j += 1;
 		}
 	}
-	return (0);
+	return (i % (CIRC_BUFSIZE - 1));
 }

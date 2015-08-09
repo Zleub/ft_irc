@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/22 21:07:13 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/09 16:48:50 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/09 22:41:26 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,16 @@ int		do_i_have_something_to_do(int fd)
 	}
 	if (g_clients[fd].state == COMMAND)
 	{
+		int nbr;
+
+		nbr = 0;
 		if (LEN(test) == 0)
-			read_buf(test, &g_clients[fd].buf);
+			nbr = read_buf(test, &g_clients[fd].buf);
 		else
-			read_buf(&test[LEN(test)], &g_clients[fd].buf);
+			nbr = read_buf(&test[LEN(test)], &g_clients[fd].buf);
+
+		printf("COMMAND: I read %d chars <%c>\n", nbr, g_clients[fd].buf.buf[nbr]);
+		g_clients[fd].buf.head = nbr + 1;
 		if (test[LEN(test) - 1] == '\n')
 			do_command(fd, test);
 		return (0);
@@ -50,7 +56,7 @@ int		do_command(int fd, char *str)
 	int i;
 
 	i = 0;
-	printf("do_command call : %d, %s\n", fd, str);
+	printf("do_command call : %d, <%s>\n", fd, str);
 	while (i < COMMAND_SETSIZE)
 	{
 		if (!ft_strncmp(str + 1, g_commands[i].id, LEN(g_commands[i].id)))

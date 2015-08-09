@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 16:14:37 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/09 22:16:56 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/09 22:22:16 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,6 @@ void	do_business(int fd_talker)
 	else if (g_clients[fd_talker].state > PENDING
 		&& g_clients[fd_talker].buf.buf[index] == '\n')
 		g_clients[fd_talker].state = ONLINE;
-
-	t_circ_buf buffer = g_clients[fd_talker].buf;
-	int i = g_clients[fd_talker].buf.head;
-
-	while (buffer.buf[buffer.head] != '\n')
-		i = (i + 1) % (CIRC_BUFSIZE - 1);
-	buffer.head = i;
 }
 
 int		do_i_have_something_to_read(int fd)
