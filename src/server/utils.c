@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 21:40:40 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/10 01:40:08 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/10 14:50:44 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,9 @@ void	debug_client(int fd)
 	t_client	*c;
 
 	c = &g_clients[fd];
-	printf("[%d]-> %s |%s - %s|\n",
+	printf("[%d @ %s]-> %s <----->\n%s - %s\n<----->\n",
 		c->id,
+		c->room,
 		g_array[c->state],
 		c->nickname,
 		c->buf.buf);

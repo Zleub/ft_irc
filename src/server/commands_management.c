@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/22 21:07:13 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/10 01:42:57 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/10 13:46:21 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int		do_i_have_something_to_do(int fd)
 		int nbr;
 
 		nbr = 0;
+		printf("CACATEST\n");
 		if (LEN(test) == 0)
 			nbr = read_buf(test, &g_clients[fd].buf);
 		else

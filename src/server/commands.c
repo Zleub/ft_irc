@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/22 21:09:56 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/10 01:31:54 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/10 14:58:48 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,12 @@ int		join_function(int fd, char *str)
 		printf("join function %s\n", array[0]);
 		ft_strncpy(g_clients[fd].room, array[0], ROOMNAME_SIZE - 1);
 	}
-	g_clients[fd].state = ONLINE;
+	debug_client(fd);
+	// if (g_clients[fd].buf.tail - g_clients[fd].buf.head != 0)
+	// 		g_clients[fd].state = TRANSIT;
+	// else
+		g_clients[fd].state = ONLINE;
+	debug_client(fd);
 	return (0);
 }
 

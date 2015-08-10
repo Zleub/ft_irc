@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 21:39:15 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/10 01:48:16 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/10 14:50:11 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int		write_buf(t_circ_buf *ptr, char *mem, int size)
 	return (i);
 }
 
+#include <stdio.h>
+
 int		read_buf(char *str, t_circ_buf *ptr)
 {
 	int		i;
@@ -55,8 +57,12 @@ int		read_buf(char *str, t_circ_buf *ptr)
 	int		n;
 
 	n = 0;
-	while (ptr->buf[ptr->head + n] != '\n')
+	printf("readbuff tail:%d\n", ptr->tail);
+	while (ptr->buf[ptr->head + n] != '\n' && n != ptr->tail) {
+		printf("%d\n", n);
 		n = (n + 1) % (CIRC_BUFSIZE - 1);
+	}
+	printf("readbuff 2\n");
 	if (n < ptr->tail - ptr->head)
 	{
 		ft_strncpy(str, (ptr->buf + ptr->head), n + 1);

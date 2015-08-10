@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/19 22:49:14 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/10 01:47:26 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/10 15:00:24 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int		client_write(int fd_talk, int fd_listen)
 			int nbr;
 
 			nbr = 0;
+			debug_client(fd_talk);
 			if (talker->state == TRANSIT)
 			{
 				ft_strcpy(str, talker->nickname);
@@ -72,13 +73,14 @@ int		client_read(int fd)
 
 		// printf("test READ : %s\n", buf);
 		write_buf(&(g_clients[fd].buf), buf, n);
+		debug_client(fd);
 		if (g_clients[fd].state == COMMAND || g_clients[fd].state == PENDING)
 			;
 		else if (g_clients[fd].state != TRANSIT &&
 				g_clients[fd].state != WRITING)
 			g_clients[fd].state = TRANSIT;
-		else
-			g_clients[fd].state = WRITING;
+		// else
+		// 	g_clients[fd].state = WRITING;
 		// debug_client(fd);
 		if (fd == 0 && !ft_strcmp(buf, "debug\n"))
 			debug_clients();
