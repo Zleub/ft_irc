@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 21:40:40 by adebray           #+#    #+#             */
-/*   Updated: 2015/07/23 01:03:47 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/10 01:40:08 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,9 @@ void	debug_clients(void)
 	{
 		if (g_clients[i].state != OFFLINE)
 		{
-			printf("%d,\tH: %d,\tT: %d,\t: <%s>\n",
+			printf("%d, %s\tH: %d,\tT: %d,\t: <%s>\n",
 				i,
+				g_array[g_clients[i].state],
 				g_clients[i].buf.head,
 				g_clients[i].buf.tail,
 				g_clients[i].buf.buf);

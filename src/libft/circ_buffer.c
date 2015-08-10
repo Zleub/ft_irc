@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 21:39:15 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/09 22:27:16 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/10 01:48:16 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ int		read_buf(char *str, t_circ_buf *ptr)
 		n = (n + 1) % (CIRC_BUFSIZE - 1);
 	if (n < ptr->tail - ptr->head)
 	{
-	 	ft_strncpy(str, (ptr->buf + ptr->head), n);
-	 	return (n);
+		ft_strncpy(str, (ptr->buf + ptr->head), n + 1);
+		return (n);
 	}
 	if (ptr->tail > ptr->head)
 	{
@@ -71,12 +71,14 @@ int		read_buf(char *str, t_circ_buf *ptr)
 	{
 		i = ptr->head;
 		j = 0;
-		while (i % (CIRC_BUFSIZE - 1) != ptr->tail && ptr->buf[i % (CIRC_BUFSIZE - 1)] != '\n')
+		while (i % (CIRC_BUFSIZE - 1) != ptr->tail || ptr->buf[i % (CIRC_BUFSIZE - 1)] != '\n')
 		{
 			str[j] = ptr->buf[i % (CIRC_BUFSIZE - 1)];
 			i += 1;
 			j += 1;
 		}
 	}
+	if (ptr->buf[i % (CIRC_BUFSIZE - 1)] == '\n')
+		str[j + 1] = '\n';
 	return (i % (CIRC_BUFSIZE - 1));
 }

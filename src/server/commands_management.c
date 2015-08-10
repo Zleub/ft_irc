@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/22 21:07:13 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/09 22:41:26 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/10 01:42:57 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int		do_i_have_something_to_do(int fd)
 		else
 			nbr = read_buf(&test[LEN(test)], &g_clients[fd].buf);
 
-		printf("COMMAND: I read %d chars <%c>\n", nbr, g_clients[fd].buf.buf[nbr]);
+		printf("COMMAND: I read %d chars <%s>\n", nbr, test);
 		g_clients[fd].buf.head = nbr + 1;
 		if (test[LEN(test) - 1] == '\n')
 			do_command(fd, test);

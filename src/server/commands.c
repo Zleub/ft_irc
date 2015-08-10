@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/22 21:09:56 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/09 16:44:04 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/10 01:31:54 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int		join_function(int fd, char *str)
 
 	fill_array(str, array, ONE_PARAM);
 	if (array[0]) {
-		printf("%s\n", array[0]);
+		printf("join function %s\n", array[0]);
 		ft_strncpy(g_clients[fd].room, array[0], ROOMNAME_SIZE - 1);
 	}
 	g_clients[fd].state = ONLINE;

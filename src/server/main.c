@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 16:14:37 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/09 22:22:16 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/10 02:01:02 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,10 @@ void	do_business(int fd_talker)
 	int index;
 
 	state = g_clients[fd_talker].state;
-	if (do_i_have_something_to_do(fd_talker))
+	if (do_i_have_something_to_do(fd_talker)) {
 		fd_diteration(fd_talker, 0, &client_write);
+		g_clients[fd_talker].buf.head = g_clients[fd_talker].buf.tail;
+	}
 	index = g_clients[fd_talker].buf.tail - 1;
 	if (index == -1)
 		index = CIRC_BUFSIZE - 2;
@@ -52,6 +54,7 @@ void	do_business(int fd_talker)
 	else if (g_clients[fd_talker].state > PENDING
 		&& g_clients[fd_talker].buf.buf[index] == '\n')
 		g_clients[fd_talker].state = ONLINE;
+	// g_clients[fd_talker].buf.head = g_clients[fd_talker].buf.tail;
 }
 
 int		do_i_have_something_to_read(int fd)
@@ -64,8 +67,15 @@ int		do_i_have_something_to_read(int fd)
 		{
 			if (!client_read(fd))
 				client_leave(fd);
-			else
+			else {
+				debug_clients();
 				do_business(fd);
+			}
+		}
+		if (g_clients[fd].buf.tail - g_clients[fd].buf.head != 0) {
+			do_business(fd);
+			printf("-------------------\n");
+			debug_clients();
 		}
 	}
 	return (0);
