@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 16:14:37 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/10 14:52:26 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/10 16:01:00 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +38,22 @@ void	accept_server(void)
 
 void	do_business(int fd_talker)
 {
-	int state;
-	int index;
+	// int state;
+	// int index;
 
-	state = g_clients[fd_talker].state;
+	// state = g_clients[fd_talker].state;
 	if (do_i_have_something_to_do(fd_talker)) {
 		fd_diteration(fd_talker, 0, &client_write);
 		g_clients[fd_talker].buf.head = g_clients[fd_talker].buf.tail;
 	}
-	index = g_clients[fd_talker].buf.tail - 1;
-	if (index == -1)
-		index = CIRC_BUFSIZE - 2;
-	if (g_clients[fd_talker].state == COMMAND && state == PENDING)
-		g_clients[fd_talker].state = state;
-	else if (g_clients[fd_talker].state > PENDING
-		&& g_clients[fd_talker].buf.buf[index] == '\n')
-		g_clients[fd_talker].state = TRANSIT;
+	// index = g_clients[fd_talker].buf.tail - 1;
+	// if (index == -1)
+	// 	index = CIRC_BUFSIZE - 2;
+	// if (g_clients[fd_talker].state == COMMAND && state == PENDING)
+	// 	g_clients[fd_talker].state = state;
+	// else if (g_clients[fd_talker].state > PENDING
+	// 	&& g_clients[fd_talker].buf.buf[index] == '\n')
+	// 	g_clients[fd_talker].state = TRANSIT;
 	// else
 	// 	state = WRITING;
 	// g_clients[fd_talker].buf.head = g_clients[fd_talker].buf.tail;
@@ -74,11 +74,11 @@ int		do_i_have_something_to_read(int fd)
 				do_business(fd);
 			}
 		}
-		// if (g_clients[fd].buf.tail - g_clients[fd].buf.head != 0) {
-		// 	do_business(fd);
-		// 	printf("-------------------\n");
-		// 	debug_clients();
-		// }
+		if (g_clients[fd].buf.tail - g_clients[fd].buf.head != 0) {
+			do_business(fd);
+			printf("-------------------\n");
+			debug_clients();
+		}
 	}
 	return (0);
 }
