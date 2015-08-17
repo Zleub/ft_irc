@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 19:30:18 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/03 08:50:20 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/17 18:59:58 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void							debug_client(int fd);
 int								get_size(char *str);
 
 void							client_leave(int fd);
-int								client_write(int fd_talker, int fd_listener);
+int								client_write(int fd_talker, int fd_listener, char *str);
 int								client_read(int fd);
 
 typedef int						(*t_function)(int);

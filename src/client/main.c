@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 17:59:20 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/09 16:37:23 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/16 18:40:53 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <errno.h>
 
 t_network		g_net;
+WINDOW			*prompt = NULL;
 
 struct timeval		g_timeout = {
 	0,
@@ -85,24 +86,39 @@ void	fill_array(char *str, char **str_array)
 
 int		client_work(int fd)
 {
+	static int i;
+	static int j;
 	(void)fd;
-	// char str[12];
+	static char str[1024];
 	// getstr(str);
 	// printw("'%s'\n", str);
 
 	// char *buf_array[2];
-	char buf[CIRC_BUFSIZE - 1];
 
-	ft_bzero(buf, CIRC_BUFSIZE - 1);
+			char buf[CIRC_BUFSIZE - 1];
+			ft_bzero(buf, CIRC_BUFSIZE - 1);
+
 	if (FD_ISSET (fd, &(g_net.read_fd_set)))
 	{
 		if (fd == 0) { // INPUT FORM NCURSES
 			int nbr = getch();
-			mvprintw(fd, 0, "%d: %d\n", fd, nbr);
+			mvwprintw(prompt, 1, j + 1, "%c", nbr);
+			str[j] = nbr;
+			j += 1;
+			if (nbr == 13) {
+				str[j - 1] = 10;
+				j = 0;
+				write(g_net.fd, str, LEN(str));
+				ft_bzero(str, 1024);
+				wclear(prompt);
+				box(prompt, 0, 0);
+				wmove(prompt, 1, 1);
+			}
 		} else {
 			int ret = read(fd, &buf, CIRC_BUFSIZE - 2);
 			(void)ret;
-			mvprintw(fd, 0, "%d: %s\n", fd, buf);
+			mvprintw(i, 0, "%s\n", buf);
+			i = (i + 1) % (LINES - 6);
 		}
 	}
 
@@ -118,6 +134,12 @@ void	select_client(void)
 	fd_iteration(0, &client_work);
 }
 
+void	ft_signal(int sig)
+{
+	printf("signal : %d\n", sig);
+	client_quit(NULL);
+}
+
 int		main(int argc, char **argv)
 {
 	initscr();
@@ -131,10 +153,7 @@ int		main(int argc, char **argv)
 	write_header();
 	ft_bzero(&g_net, sizeof(g_net));
 
-	WINDOW * local_win = newwin(0, 0, 10, 10);
-	box(local_win, 0, 0);
-	wrefresh(local_win);
-	refresh();
+	// newwin(height, width, y, x)
 
 	FD_SET (0, &(g_net.active_fd_set));
 
@@ -143,15 +162,30 @@ int		main(int argc, char **argv)
 	else if (argc == 2)
 		client_connect(argv[1], 6667);
 
+	signal(SIGWINCH, &ft_signal);
 	// printw("%d\n", g_net.fd);
-	printw("-> %d\n", write(g_net.fd, "/join test\n", 11));
-	printw("-> %d\n", write(g_net.fd, "caca\n", 5));
+	// printw("%d | %d\n", LINES, COLS);
+	prompt = newwin(5, COLS, LINES - 5, 0);
+	box(prompt, 0, 0);
 
+	// printw("-> %d\n", write(g_net.fd, "/join test\n", 11));
+	// printw("-> %d\n", write(g_net.fd, "1 caca\n", 7));
+	// printw("-> %d\n", write(g_net.fd, "2 caca\n", 7));
+	// printw("-> %d\n", write(g_net.fd, "3 caca\n", 7));
+	// printw("-> %d\n", write(g_net.fd, "4 caca\n", 7));
+	// printw("-> %d\n", write(g_net.fd, "5 caca\n", 7));
+	// printw("-> %d\n", write(g_net.fd, "6 caca\n", 7));
+	// printw("-> %d\n", write(g_net.fd, "another one, pretty long\n", 25));
+
+
+	wmove(prompt, 1, 1);
 	// client_quit(ft_itoa(g_net.fd));
 	while (42) {
 		// fflush(stdout);
 		// fflush(stdin);
+		// refresh();
 		refresh();
+		wrefresh(prompt);
 		select_client();
 	}
 	client_quit(NULL);

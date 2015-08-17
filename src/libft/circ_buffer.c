@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 21:39:15 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/10 15:55:18 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/17 18:51:10 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,34 +57,45 @@ int		read_buf(char *str, t_circ_buf *ptr)
 	int		n;
 
 	n = 0;
-	// printf("readbuff tail:%d\n", ptr->tail);
+	// printf("readbuff head: %d, tail:%d\n", ptr->head, ptr->tail);
 	while (ptr->buf[ptr->head + n] != '\n' && n != ptr->tail) {
-		// printf("%d\n", n);
+		// printf("n: %d\n", n);
 		n = (n + 1) % (CIRC_BUFSIZE - 1);
 	}
 	// printf("readbuff 2\n");
 	if (n < ptr->tail - ptr->head)
 	{
 		ft_strncpy(str, (ptr->buf + ptr->head), n + 1);
+		ptr->head += n + 1;
+		// printf("1\n");
 		return (n);
 	}
 	if (ptr->tail > ptr->head)
 	{
 		ft_strncpy(str, (ptr->buf + ptr->head), ptr->tail - ptr->head);
+		ptr->head = ptr->tail;
+		// printf("2\n");
 		return (ptr->tail - ptr->head);
 	}
 	else
 	{
 		i = ptr->head;
 		j = 0;
-		while (i % (CIRC_BUFSIZE - 1) != ptr->tail || ptr->buf[i % (CIRC_BUFSIZE - 1)] != '\n')
+		while (i % (CIRC_BUFSIZE - 1) != ptr->tail && ptr->buf[i % (CIRC_BUFSIZE - 1)] != '\n')
 		{
+			// printf("-> %d\n", j);
 			str[j] = ptr->buf[i % (CIRC_BUFSIZE - 1)];
 			i += 1;
 			j += 1;
 		}
 	}
-	if (ptr->buf[i % (CIRC_BUFSIZE - 1)] == '\n')
+	if (ptr->buf[i % (CIRC_BUFSIZE - 1)] == '\n') {
 		str[j + 1] = '\n';
+		ptr->head = (i + 1) % (CIRC_BUFSIZE - 1);
+	}
+	else
+		ptr->head = i % (CIRC_BUFSIZE - 1);
+
+	// printf("3\n");
 	return (i % (CIRC_BUFSIZE - 1));
 }

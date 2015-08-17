@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/19 22:49:14 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/11 13:03:41 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/17 19:14:44 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,36 +19,36 @@ void	client_leave(int fd)
 	ft_memset(&g_clients[fd], 0, sizeof(t_client));
 }
 
-int		client_write(int fd_talk, int fd_listen)
+int		client_write(int fd_talk, int fd_listen, char *str)
 {
-	char			str[CIRC_BUFSIZE + NICKNAME_SIZE + 3];
+	// char			str[CIRC_BUFSIZE + NICKNAME_SIZE + 3];
 	struct s_client	*talker;
 
 	talker = &g_clients[fd_talk];
-	ft_bzero(str, CIRC_BUFSIZE + NICKNAME_SIZE + 3);
+	// ft_bzero(str, CIRC_BUFSIZE + NICKNAME_SIZE + 3);
 	if (FD_ISSET(fd_listen, &(g_net.write_fd_set)))
 	{
-		printf("client_write fd_talk: %d, fd_listen: %d\n", fd_talk, fd_listen);
+		// printf("client_write fd_talk: %d, fd_listen: %d\n", fd_talk, fd_listen);
 		if (talker->state > PENDING && fd_listen != 0
 			// && fd_listen != fd_talk
 			&& fd_listen != g_net.fd
 			&& !strcmp(g_clients[fd_talk].room, g_clients[fd_listen].room))
 		{
-			int nbr;
+			// int nbr;
 
-			nbr = 0;
-			debug_client(fd_talk);
-			if (talker->buf.buf[talker->buf.head - 1] == '\n')
-			{
-				ft_strcpy(str, talker->nickname);
-				ft_strcpy(str + LEN(talker->nickname), ":\t");
-				nbr = read_buf(str + LEN(talker->nickname) + 2, &(talker->buf));
-			}
-			else
-				nbr = read_buf(str, &(talker->buf));
+			// nbr = 0;
+			// // debug_client(fd_talk);
+			// if (talker->buf.buf[talker->buf.head - 1] == '\n')
+			// {
+			// 	ft_strcpy(str, talker->nickname);
+			// 	ft_strcpy(str + LEN(talker->nickname), ":\t");
+			// 	nbr = read_buf(str + LEN(talker->nickname) + 2, &(talker->buf));
+			// }
+			// else
+			// 	nbr = read_buf(str, &(talker->buf));
 
 			// talker->buf.head = nbr + 1;
-			printf("BROADCAST: I read %d chars\n", nbr);
+			printf("BROADCAST: I read %zu chars\n", LEN(str));
 			if (send(fd_listen, str, LEN(str), 0) == -1)
 				diewitherror("send error\n");
 		}
@@ -73,7 +73,7 @@ int		client_read(int fd)
 
 		// printf("test READ : %s\n", buf);
 		write_buf(&(g_clients[fd].buf), buf, n);
-		debug_client(fd);
+		// debug_client(fd);
 		if (g_clients[fd].state == COMMAND || g_clients[fd].state == PENDING)
 			;
 		// else if (g_clients[fd].state != TRANSIT &&
