@@ -80,8 +80,4 @@ char		*ft_strtrim(char const *s);
 int			ft_tolower(int c);
 int			ft_toupper(int c);
 
-int			write_buf(struct s_circ_buf *ptr, char *mem, int size);
-int			read_buf(char *str, struct s_circ_buf *ptr);
-int			size_buf(struct s_circ_buf *ptr);
-
 #endif

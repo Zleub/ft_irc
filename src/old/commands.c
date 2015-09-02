@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/22 21:09:56 by adebray           #+#    #+#             */
-/*   Updated: 2015/09/02 16:28:28 by adebray          ###   ########.fr       */
+/*   Updated: 2015/08/16 18:45:21 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int		nick_function(int fd, char *str)
 	fill_array(str, array, ONE_PARAM);
 	if (array[0])
 		ft_strncpy(g_clients[fd].nickname, array[0], NICKNAME_SIZE - 1);
-	return (1);
+	return (0);
 }
 
 int		join_function(int fd, char *str)
@@ -70,7 +70,7 @@ int		join_function(int fd, char *str)
 	// else
 		g_clients[fd].state = ONLINE;
 	// debug_client(fd);
-	return (1);
+	return (0);
 }
 
 int		leave_function(int fd, char *str)
@@ -78,11 +78,11 @@ int		leave_function(int fd, char *str)
 	(void)str;
 	ft_bzero(g_clients[fd].room, ROOMNAME_SIZE);
 	g_clients[fd].state = PENDING;
-	return (1);
+	return (0);
 }
 
 int		function_test(int fd, char *str)
 {
 	printf("This is function_test with (%d)%s\n", fd, str);
-	return (1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 19:30:18 by adebray           #+#    #+#             */
-/*   Updated: 2015/08/17 18:59:58 by adebray          ###   ########.fr       */
+/*   Updated: 2015/09/02 13:15:08 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,19 @@
 # include <netinet/ip.h>
 # include <arpa/inet.h>
 # include <signal.h>
+
+# define CIRC_BUFSIZE 1024
+
+typedef struct s_circ_buf	t_circ_buf;
+
+struct						s_circ_buf
+{
+	char					buf[CIRC_BUFSIZE];
+	int						head;
+	int						tail;
+};
+
+# define COMMAND_BUFSIZE 1024
 
 typedef struct sockaddr_in		t_sockin;
 typedef struct s_network		t_network;
@@ -32,8 +45,6 @@ struct							s_network
 	fd_set						read_fd_set;
 	fd_set						write_fd_set;
 };
-
-t_network						g_net;
 
 enum							e_state
 {
@@ -60,8 +71,6 @@ struct							s_client
 	struct s_circ_buf			buf;
 };
 
-t_client						g_clients[FD_SETSIZE];
-
 typedef struct s_command		t_command;
 
 struct							s_command
@@ -70,21 +79,26 @@ struct							s_command
 	int							(*f)(int, char *);
 };
 
+typedef int						(*t_function)(int);
+typedef int						(*t_dfunction)(int, int);
+
+/* GLOBAL DECLARATION */
+
+t_network						g_net;
+t_client						g_clients[FD_SETSIZE];
+
 int								die(void);
 int								diewitherror(char *error);
 int								textreturn(char *text, int ret);
 void							write_header(void);
 
 void							debug_clients(void);
-void							debug_client(int fd);
+void							debug_client(t_client *c);
 int								get_size(char *str);
 
 void							client_leave(int fd);
 int								client_write(int fd_talker, int fd_listener, char *str);
 int								client_read(int fd);
-
-typedef int						(*t_function)(int);
-typedef int						(*t_dfunction)(int, int);
 
 void							fd_iteration(int i, t_function f);
 void							fd_diteration(int i, int j, t_dfunction f);

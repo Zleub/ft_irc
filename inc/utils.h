@@ -26,17 +26,4 @@ struct						s_read
 	struct s_read			*next;
 };
 
-# define CIRC_BUFSIZE 1024
-
-typedef struct s_circ_buf	t_circ_buf;
-
-struct						s_circ_buf
-{
-	char					buf[CIRC_BUFSIZE];
-	int						head;
-	int						tail;
-};
-
-# define COMMAND_BUFSIZE 1024
-
 #endif
