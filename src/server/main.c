@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/09/02 11:48:35 by adebray           #+#    #+#             */
-/*   Updated: 2015/09/02 16:42:02 by adebray          ###   ########.fr       */
+/*   Updated: 2015/09/02 17:10:12 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,6 +295,26 @@ int		run(void)
 	return (0);
 }
 
+void	__test(int sig)
+{
+	char s[2];
+	int i;
+
+	i = 3;
+	s[0] = 4;
+	s[1] = 10;
+	(void)sig;
+	printf("Im here\n");
+	while (i < FD_SETSIZE)
+	{
+		// write(i, s, 2);
+		close(i);
+		i += 1;
+	}
+	close(g_net.fd);
+	exit(0);
+}
+
 int		main(int ac, char *av[])
 {
 	(void)ac;
@@ -302,7 +322,7 @@ int		main(int ac, char *av[])
 
 	ft_bzero(&g_net, sizeof(g_net));
 	ft_bzero(&g_clients, sizeof(g_clients));
-
+	signal(SIGINT, &__test);
 	if (ac < 2)
 		init("6667");
 	else if (ac < 3)
