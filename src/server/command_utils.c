@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/09/03 14:26:28 by adebray           #+#    #+#             */
-/*   Updated: 2015/09/03 14:54:51 by adebray          ###   ########.fr       */
+/*   Updated: 2015/09/03 17:46:36 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ t_command	g_commands[COMMAND_SETSIZE] = {
 	{"nick", &nick_function},
 	{"join", &join_function},
 	{"leave", &leave_function},
-	{"who", &function_test},
-	{"msg", &function_test},
+	{"who", &who_function},
+	{"msg", &msg_function},
 };
 
 int		do_command(int fd, char *str)

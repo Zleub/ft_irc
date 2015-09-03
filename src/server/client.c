@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/09/03 14:38:26 by adebray           #+#    #+#             */
-/*   Updated: 2015/09/03 14:50:03 by adebray          ###   ########.fr       */
+/*   Updated: 2015/09/03 18:18:44 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@ char	*g_array[STATELEN] = {
 
 void	debug_client(t_client *c)
 {
-	printf("%d\t| %s\tH: %d,\tT: %d,\t: <%s>\n",
+	printf("%d[%s]\t| %s\tH: %d,\tT: %d,\t: <%s>\n",
 		c->id,
+		c->room,
 		g_array[c->state],
 		c->buf.head,
 		c->buf.tail,

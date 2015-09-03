@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 19:30:18 by adebray           #+#    #+#             */
-/*   Updated: 2015/09/03 15:05:50 by adebray          ###   ########.fr       */
+/*   Updated: 2015/09/03 17:47:20 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ int							function_test(int fd, char *str);
 int							nick_function(int fd, char *str);
 int							join_function(int fd, char *str);
 int							leave_function(int fd, char *str);
+int							who_function(int fd, char *str);
+int							msg_function(int fd, char *str);
 
 int							get_size(char *str);
 void						fill_array(char *str, char **str_array, int n);

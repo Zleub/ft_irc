@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/09/03 13:13:02 by adebray           #+#    #+#             */
-/*   Updated: 2015/09/03 13:28:00 by adebray          ###   ########.fr       */
+/*   Updated: 2015/09/03 17:01:34 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ int		client_connect(char *str, int port)
 int		client_work(int fd)
 {
 	static int	i;
+	int			j;
 	char		buf[CIRC_BUFSIZE - 1];
+	char		**tmp;
 
 	ft_bzero(buf, CIRC_BUFSIZE - 1);
 	if (FD_ISSET(fd, &(g_net.read_fd_set)))
@@ -54,8 +56,14 @@ int		client_work(int fd)
 		{
 			if ((read(fd, &buf, CIRC_BUFSIZE - 2)) == 0)
 				client_quit(NULL);
-			mvprintw(i, 0, "%s\n", buf);
-			i = (i + 1) % (LINES - 6);
+			tmp = ft_strsplit(buf, '\n');
+			j = 0;
+			while (tmp[j])
+			{
+				mvprintw(i, 0, "%s\n", tmp[j]);
+				j = j + 1;
+				i = (i + 1) % (LINES - 6);
+			}
 		}
 	}
 	return (0);
