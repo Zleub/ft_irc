@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/15 17:59:20 by adebray           #+#    #+#             */
-/*   Updated: 2015/09/02 18:50:23 by adebray          ###   ########.fr       */
+/*   Updated: 2015/09/03 12:09:43 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,7 @@ int		client_connect(char *str, int port)
 		sizeof(g_net.my_addr)) == -1)
 	{
 //		INFO MANAGEMENT
-		// printw("Connection at %s:%d failed\n", str, port);
-		client_quit("HEREIAM");
+		printw("Connection at %s:%d failed\n", str, port);
 		if (g_net.fd != 0)
 		{
 			close(g_net.fd);
@@ -59,9 +58,10 @@ int		client_connect(char *str, int port)
 	}
 	// client_quit(ft_itoa(g_net.fd));
 	FD_SET (g_net.fd, &(g_net.active_fd_set));
+
 //	INFO MANAGEMENT
-//	printf("Connected to %s:%d\n", str, port);
-	return (0);
+	printf("Connected to %s:%d\n", str, port);
+	return (1);
 }
 
 int		command(char *buf)
@@ -84,9 +84,9 @@ int		command(char *buf)
 			i += 1;
 		}
 		if (j == 2)
-			client_connect(tmp[0], 0);
+			return client_connect(tmp[0], 0);
 		if (j == 3)
-			client_connect(tmp[0], ft_atoi(tmp[1]));
+			return client_connect(tmp[0], ft_atoi(tmp[1]));
 	}
 	return (0);
 }
@@ -104,9 +104,23 @@ int		client_work(int fd)
 		if (fd == 0)
 		{
 			int nbr = getch();
-			mvwprintw(prompt, 1, j + 1, "%c", nbr);
-			str[j] = nbr;
-			j += 1;
+
+			if (nbr == 127)
+			{
+				if (j > 0)
+				{
+					j -= 1;
+					mvwprintw(prompt, 1, j + 1, " ");
+					wmove(prompt, 1, j + 1);
+					str[j] = '\0';
+				}
+			}
+			else
+			{
+				mvwprintw(prompt, 1, j + 1, "%c", nbr);
+				str[j] = nbr;
+				j += 1;
+			}
 			if (nbr == 13)
 			{
 				if (!command(str))
