@@ -14,7 +14,7 @@
 
 void	ft_signal(int sig)
 {
-	printf("signal : %d\n", sig);
+	(void)sig;
 	client_quit(NULL);
 }
 

@@ -28,7 +28,7 @@ void	accept_server(void)
 	tmp = ft_itoa(g_net.client_nbr);
 	ft_strcpy(g_clients[fd].nickname + 6, tmp);
 	free(tmp);
-	printf("<-- NEW ENTRY %d -->\n", fd);
+	// printf("<-- NEW ENTRY %d -->\n", fd);
 }
 
 int		do_token(int index, char *token)
@@ -36,7 +36,12 @@ int		do_token(int index, char *token)
 	int		i;
 	char	str[CIRC_BUFSIZE + NICKNAME_SIZE + 3];
 
-	printf("token for %d: <%s>#%zu\n", index, token, LEN(token));
+	// printf("token for %d: <%s>#%zu\n", index, token, LEN(token));
+	if (token[LEN(token) - 1] != '\n')
+	{
+		g_clients[index].buf.head -= LEN(token);
+		return (0);
+	}
 	if (!do_command(index, token) && LEN(token) != 0)
 	{
 		i = 0;
@@ -85,7 +90,7 @@ int		read_fd(int index)
 			else
 				do_business(index);
 		}
-		debug_clients();
+		// debug_clients();
 	}
 	return (0);
 }

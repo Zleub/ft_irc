@@ -62,7 +62,6 @@ void	test(int sig)
 	s[0] = 4;
 	s[1] = 10;
 	(void)sig;
-	printf("Im here\n");
 	while (i < FD_SETSIZE)
 	{
 		close(i);

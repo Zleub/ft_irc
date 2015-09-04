@@ -33,7 +33,7 @@ int		join_function(int fd, char *str)
 	fill_array(str, array, ONE_PARAM);
 	if (array[0])
 	{
-		printf("join function %s\n", array[0]);
+		// printf("join function %s\n", array[0]);
 		ft_strncpy(g_clients[fd].room, array[0], ROOMNAME_SIZE - 1);
 	}
 	free(array[0]);
@@ -108,11 +108,5 @@ int		msg_function(int fd, char *str)
 		k += 1;
 	}
 
-	return (1);
-}
-
-int		function_test(int fd, char *str)
-{
-	printf("This is function_test with (%d)%s\n", fd, str);
 	return (1);
 }
