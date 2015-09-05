@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/22 21:09:56 by adebray           #+#    #+#             */
-/*   Updated: 2015/09/03 18:16:25 by adebray          ###   ########.fr       */
+/*   Updated: 2015/09/05 15:01:05 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,23 @@ int		nick_function(int fd, char *str)
 
 int		join_function(int fd, char *str)
 {
+	char message[ROOMNAME_SIZE + 10];
 	char *array[ONE_PARAM];
 
 	ft_bzero(array, sizeof(array));
 	fill_array(str, array, ONE_PARAM);
-	if (array[0])
+	if (array[0] != NULL && strcmp("", array[0]))
 	{
-		// printf("join function %s\n", array[0]);
+		ft_bzero(g_clients[fd].room, ROOMNAME_SIZE);
 		ft_strncpy(g_clients[fd].room, array[0], ROOMNAME_SIZE - 1);
+		ft_bzero(message, NICKNAME_SIZE + 10);
+		ft_strcpy(message, "Joined: ");
+		ft_strcpy(message + 8, g_clients[fd].room);
+		ft_strcpy(message + 8 + LEN(g_clients[fd].room), "\n");
+		send(fd, message, LEN(message), 0);
+		free(array[0]);
+		g_clients[fd].state = ONLINE;
 	}
-	free(array[0]);
-	g_clients[fd].state = ONLINE;
 	return (1);
 }
 

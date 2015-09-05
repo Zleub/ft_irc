@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/09/03 14:53:16 by adebray           #+#    #+#             */
-/*   Updated: 2015/09/03 15:01:09 by adebray          ###   ########.fr       */
+/*   Updated: 2015/09/05 16:37:39 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int		do_token(int index, char *token)
 	int		i;
 	char	str[CIRC_BUFSIZE + NICKNAME_SIZE + 3];
 
-	// printf("token for %d: <%s>#%zu\n", index, token, LEN(token));
+	printf("token for %d: <%s>#%zu\n", index, token, LEN(token));
 	if (token[LEN(token) - 1] != '\n')
 	{
 		g_clients[index].buf.head -= LEN(token);
