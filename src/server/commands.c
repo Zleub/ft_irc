@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/22 21:09:56 by adebray           #+#    #+#             */
-/*   Updated: 2015/09/05 15:01:05 by adebray          ###   ########.fr       */
+/*   Updated: 2015/09/05 18:37:59 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ int		who_function(int fd, char *str)
 	i = 0;
 	while (i < FD_SETSIZE)
 	{
-		if (g_clients[i].state == ONLINE && !ft_strcmp(g_clients[i].room, g_clients[fd].room))
+		if (g_clients[i].state == ONLINE &&
+			!ft_strcmp(g_clients[i].room, g_clients[fd].room))
 		{
 			ft_bzero(buf, NICKNAME_SIZE + 1);
 			ft_strcpy(buf, g_clients[i].nickname);
@@ -79,11 +80,9 @@ int		who_function(int fd, char *str)
 
 int		msg_function(int fd, char *str)
 {
-	char	message[CIRC_BUFSIZE + NICKNAME_SIZE + 3];
 	char	nick_buf[NICKNAME_SIZE + 1];
 	int		i;
 	int		j;
-	int		k;
 
 	i = 0;
 	ft_bzero(nick_buf, NICKNAME_SIZE + 1);
@@ -97,18 +96,7 @@ int		msg_function(int fd, char *str)
 	}
 	while (str[i] && ft_isspace(str[i + j]))
 		i += 1;
-	k = 0;
-	while (k < FD_SETSIZE)
-	{
-		if (!ft_strcmp(nick_buf, g_clients[k].nickname) && g_clients[k].state != OFFLINE)
-		{
-			ft_bzero(message, CIRC_BUFSIZE + NICKNAME_SIZE + 3);
-			ft_strcpy(message, g_clients[fd].nickname);
-			ft_strcpy(message + LEN(g_clients[fd].nickname), ":\t");
-			ft_strcpy(message + LEN(g_clients[fd].nickname) + 2, str + i + j);
-			send(k, message, LEN(message), 0);
-		}
-		k += 1;
-	}
+	if (strcmp(str + i + j, ""))
+		send_private_message(fd, nick_buf, str + i + j);
 	return (1);
 }

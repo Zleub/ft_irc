@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 19:30:18 by adebray           #+#    #+#             */
-/*   Updated: 2015/09/03 17:47:20 by adebray          ###   ########.fr       */
+/*   Updated: 2015/09/05 19:00:23 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,10 @@ int							client_read(int fd);
 
 void						fd_iteration(int i, t_function f);
 void						fd_diteration(int i, int j, t_dfunction f);
-
+void						send_private_message(int fd, char *nick, char *msg);
 int							do_i_have_something_to_do(int fd);
 int							do_command(int fd, char *str);
 
-int							function_test(int fd, char *str);
 int							nick_function(int fd, char *str);
 int							join_function(int fd, char *str);
 int							leave_function(int fd, char *str);

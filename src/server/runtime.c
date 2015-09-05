@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/09/03 14:53:16 by adebray           #+#    #+#             */
-/*   Updated: 2015/09/05 16:37:39 by adebray          ###   ########.fr       */
+/*   Updated: 2015/09/05 19:02:14 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	accept_server(void)
 	tmp = ft_itoa(g_net.client_nbr);
 	ft_strcpy(g_clients[fd].nickname + 6, tmp);
 	free(tmp);
-	// printf("<-- NEW ENTRY %d -->\n", fd);
 }
 
 int		do_token(int index, char *token)
@@ -36,10 +35,10 @@ int		do_token(int index, char *token)
 	int		i;
 	char	str[CIRC_BUFSIZE + NICKNAME_SIZE + 3];
 
-	printf("token for %d: <%s>#%zu\n", index, token, LEN(token));
 	if (token[LEN(token) - 1] != '\n' && LEN(token) < CIRC_BUFSIZE)
 	{
-		g_clients[index].buf.head -= LEN(token);
+		g_clients[index].buf.head =
+		(g_clients[index].buf.head - LEN(token)) % CIRC_BUFSIZE;
 		return (0);
 	}
 	if (!do_command(index, token) && LEN(token) != 0)
@@ -49,7 +48,6 @@ int		do_token(int index, char *token)
 		ft_strcpy(str, g_clients[index].nickname);
 		ft_strcpy(str + LEN(g_clients[index].nickname), ":\t");
 		ft_strcpy(str + LEN(g_clients[index].nickname) + 2, token);
-		// printf("send trace\n");
 		while (i < FD_SETSIZE)
 		{
 			client_write(index, i, str);
@@ -91,7 +89,6 @@ int		read_fd(int index)
 			else
 				do_business(index);
 		}
-		// debug_clients();
 	}
 	return (0);
 }

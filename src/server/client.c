@@ -6,7 +6,7 @@
 /*   By: adebray <adebray@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/09/03 14:38:26 by adebray           #+#    #+#             */
-/*   Updated: 2015/09/03 18:18:44 by adebray          ###   ########.fr       */
+/*   Updated: 2015/09/05 18:32:16 by adebray          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ void	debug_clients(void)
 
 void	client_leave(int fd)
 {
-	// printf("<--- CLIENT LEAVE %d --->\n", fd);
 	close(fd);
 	FD_CLR(fd, &(g_net.active_fd_set));
 	ft_memset(&g_clients[fd], 0, sizeof(t_client));
@@ -58,7 +57,6 @@ int		client_read(int index)
 	int		n;
 	char	buf[CIRC_BUFSIZE + 1];
 
-	// printf("Reading %d\n", index);
 	ft_bzero(buf, CIRC_BUFSIZE + 1);
 	n = 0;
 	if ((n = read(index, buf, CIRC_BUFSIZE)) < 1)
@@ -66,7 +64,6 @@ int		client_read(int index)
 	else
 	{
 		write_buffer(&g_clients[index].buf, buf);
-		// printf("Msg size: %d\n", n);
 		return (n);
 	}
 }
@@ -78,12 +75,10 @@ int		client_write(int fd_talk, int fd_listen, char *str)
 	talker = &g_clients[fd_talk];
 	if (FD_ISSET(fd_listen, &(g_net.write_fd_set)))
 	{
-		printf("trace\n");
 		if (talker->state > PENDING && fd_listen != 0
 			&& fd_listen != g_net.fd
 			&& !strcmp(g_clients[fd_talk].room, g_clients[fd_listen].room))
 		{
-			// printf("BROADCAST: I read %zu chars\n", LEN(str));
 			if (send(fd_listen, str, LEN(str), 0) == -1)
 				die();
 		}
