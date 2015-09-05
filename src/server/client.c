@@ -78,6 +78,7 @@ int		client_write(int fd_talk, int fd_listen, char *str)
 	talker = &g_clients[fd_talk];
 	if (FD_ISSET(fd_listen, &(g_net.write_fd_set)))
 	{
+		printf("trace\n");
 		if (talker->state > PENDING && fd_listen != 0
 			&& fd_listen != g_net.fd
 			&& !strcmp(g_clients[fd_talk].room, g_clients[fd_listen].room))

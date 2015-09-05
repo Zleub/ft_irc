@@ -37,7 +37,7 @@ int		do_token(int index, char *token)
 	char	str[CIRC_BUFSIZE + NICKNAME_SIZE + 3];
 
 	printf("token for %d: <%s>#%zu\n", index, token, LEN(token));
-	if (token[LEN(token) - 1] != '\n')
+	if (token[LEN(token) - 1] != '\n' && LEN(token) < CIRC_BUFSIZE)
 	{
 		g_clients[index].buf.head -= LEN(token);
 		return (0);
@@ -49,6 +49,7 @@ int		do_token(int index, char *token)
 		ft_strcpy(str, g_clients[index].nickname);
 		ft_strcpy(str + LEN(g_clients[index].nickname), ":\t");
 		ft_strcpy(str + LEN(g_clients[index].nickname) + 2, token);
+		// printf("send trace\n");
 		while (i < FD_SETSIZE)
 		{
 			client_write(index, i, str);

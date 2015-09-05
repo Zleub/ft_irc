@@ -87,18 +87,16 @@ int		msg_function(int fd, char *str)
 
 	i = 0;
 	ft_bzero(nick_buf, NICKNAME_SIZE + 1);
-	while ((ft_isspace(str[i - 1]) && !ft_isspace(str[i])) == 0)
+	while (str[i] && ((ft_isspace(str[i - 1]) && !ft_isspace(str[i])) == 0))
 		i += 1;
 	j = 0;
-	while (!ft_isspace(str[i + j]))
+	while (str[i] && !ft_isspace(str[i + j]))
 	{
 		nick_buf[j] = str[i + j];
 		j += 1;
 	}
-	while (ft_isspace(str[i + j]))
+	while (str[i] && ft_isspace(str[i + j]))
 		i += 1;
-
-	printf("Server-side, msg function: %d to %s <%s>\n", fd, nick_buf, str + i + j);
 	k = 0;
 	while (k < FD_SETSIZE)
 	{
@@ -108,11 +106,9 @@ int		msg_function(int fd, char *str)
 			ft_strcpy(message, g_clients[fd].nickname);
 			ft_strcpy(message + LEN(g_clients[fd].nickname), ":\t");
 			ft_strcpy(message + LEN(g_clients[fd].nickname) + 2, str + i + j);
-
 			send(k, message, LEN(message), 0);
 		}
 		k += 1;
 	}
-
 	return (1);
 }
